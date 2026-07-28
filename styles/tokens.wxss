@@ -1,0 +1,102 @@
+page {
+  --color-bg: #F8F5EF;
+  --color-surface: #FFFCF7;
+  --color-surface-strong: #FFFFFF;
+  --color-text: #222222;
+  --color-muted: #666666;
+  --color-subtle: #918A82;
+  --color-primary: #C94732;
+  --color-primary-soft: #F7E9E5;
+  --color-primary-wash: rgba(201, 71, 50, 0.08);
+  --color-primary-border: rgba(201, 71, 50, 0.28);
+  --color-primary-border-strong: rgba(201, 71, 50, 0.42);
+  --color-secondary: #B58A4A;
+  --color-line: #EAE3D9;
+  --color-control-bg: #F1ECE4;
+  --color-status-positive: #3F7468;
+  --color-status-positive-soft: #E4EEE9;
+  --color-status-neutral: #6D6862;
+  --color-status-neutral-soft: #EFECE7;
+  --color-status-caution: #9A7139;
+  --color-status-caution-soft: #F6EEDC;
+  --color-status-ended: #7C766F;
+  --color-status-ended-soft: #ECE9E4;
+  --shadow-card: 0 8rpx 24rpx rgba(67, 49, 30, 0.055);
+  --shadow-soft: 0 4rpx 14rpx rgba(67, 49, 30, 0.04);
+  --shadow-primary: 0 6rpx 16rpx rgba(201, 71, 50, 0.12);
+  --radius-card: 16rpx;
+  --radius-pill: 999rpx;
+  --space-page-x: 32rpx;
+  --space-page-y: 32rpx;
+  --space-section: 28rpx;
+  --space-card: 28rpx;
+}
+
+.theme-cinnabar {
+  --color-bg: #F8F5EF;
+  --color-surface: #FFFCF7;
+  --color-surface-strong: #FFFFFF;
+  --color-primary: #C94732;
+  --color-primary-soft: #F7E9E5;
+  --color-primary-wash: rgba(201, 71, 50, 0.08);
+  --color-primary-border: rgba(201, 71, 50, 0.28);
+  --color-primary-border-strong: rgba(201, 71, 50, 0.42);
+  --color-secondary: #B58A4A;
+  --color-line: #EAE3D9;
+  --color-control-bg: #F1ECE4;
+  --shadow-card: 0 8rpx 24rpx rgba(67, 49, 30, 0.055);
+  --shadow-soft: 0 4rpx 14rpx rgba(67, 49, 30, 0.04);
+  --shadow-primary: 0 6rpx 16rpx rgba(201, 71, 50, 0.12);
+}
+
+.theme-pine {
+  --color-bg: #F3F6F2;
+  --color-surface: #FBFDF9;
+  --color-surface-strong: #FFFFFF;
+  --color-primary: #3F7468;
+  --color-primary-soft: #E3EEE9;
+  --color-primary-wash: rgba(63, 116, 104, 0.09);
+  --color-primary-border: rgba(63, 116, 104, 0.28);
+  --color-primary-border-strong: rgba(63, 116, 104, 0.44);
+  --color-secondary: #A47D43;
+  --color-line: #DDE6DF;
+  --color-control-bg: #EAEFEB;
+  --shadow-card: 0 8rpx 24rpx rgba(43, 70, 59, 0.055);
+  --shadow-soft: 0 4rpx 14rpx rgba(43, 70, 59, 0.04);
+  --shadow-primary: 0 6rpx 16rpx rgba(63, 116, 104, 0.13);
+}
+
+.theme-indigo {
+  --color-bg: #F3F5F6;
+  --color-surface: #FBFCFD;
+  --color-surface-strong: #FFFFFF;
+  --color-primary: #50677B;
+  --color-primary-soft: #E6EBEF;
+  --color-primary-wash: rgba(80, 103, 123, 0.09);
+  --color-primary-border: rgba(80, 103, 123, 0.28);
+  --color-primary-border-strong: rgba(80, 103, 123, 0.44);
+  --color-secondary: #9A7446;
+  --color-line: #DEE3E7;
+  --color-control-bg: #E9EDF0;
+  --shadow-card: 0 8rpx 24rpx rgba(45, 60, 74, 0.055);
+  --shadow-soft: 0 4rpx 14rpx rgba(45, 60, 74, 0.04);
+  --shadow-primary: 0 6rpx 16rpx rgba(80, 103, 123, 0.13);
+}
+
+.theme-gold {
+  --color-bg: #F7EEDB;
+  --color-surface: #FCF5E6;
+  --color-surface-strong: #FFF8EA;
+  --color-professional-surface: #F9F0DB;
+  --color-primary: #9B6D22;
+  --color-primary-soft: #F5EACF;
+  --color-primary-wash: rgba(155, 109, 34, 0.09);
+  --color-primary-border: rgba(155, 109, 34, 0.28);
+  --color-primary-border-strong: rgba(155, 109, 34, 0.44);
+  --color-secondary: #A17A3C;
+  --color-line: #E5D7B8;
+  --color-control-bg: #EFE3CA;
+  --shadow-card: 0 10rpx 28rpx rgba(83, 65, 32, 0.07), inset 0 1rpx 0 rgba(255, 255, 255, 0.78);
+  --shadow-soft: 0 5rpx 16rpx rgba(83, 65, 32, 0.05);
+  --shadow-primary: 0 6rpx 16rpx rgba(155, 109, 34, 0.13);
+}

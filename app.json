@@ -1,0 +1,54 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/calendar/index",
+    "pages/goodday/index",
+    "pages/profile/index",
+    "pages/onboarding/index",
+    "pages/plans/index",
+    "pages/plan-detail/index",
+    "pages/poster/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "吉易",
+    "navigationBarBackgroundColor": "#F8F5EF",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F8F5EF",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#8B8178",
+    "selectedColor": "#C94732",
+    "backgroundColor": "#FFFDF9",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "今日",
+        "iconPath": "assets/tabbar-png/tab-daily.png",
+        "selectedIconPath": "assets/tabbar-png/tab-daily-active.png"
+      },
+      {
+        "pagePath": "pages/calendar/index",
+        "text": "日历",
+        "iconPath": "assets/tabbar-png/tab-calendar.png",
+        "selectedIconPath": "assets/tabbar-png/tab-calendar-active.png"
+      },
+      {
+        "pagePath": "pages/goodday/index",
+        "text": "好日子",
+        "iconPath": "assets/tabbar-png/tab-goodday.png",
+        "selectedIconPath": "assets/tabbar-png/tab-goodday-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "assets/tabbar-png/tab-profile.png",
+        "selectedIconPath": "assets/tabbar-png/tab-profile-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

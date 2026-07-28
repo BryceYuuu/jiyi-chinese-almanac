@@ -1,0 +1,56 @@
+<view class="page-shell plan-detail-page {{themeClass}}" wx:if="{{plan}}">
+  <view class="plan-hero">
+    <view class="hero-date">
+      <text class="hero-day">{{day}}</text>
+      <text class="hero-month">{{month}}</text>
+    </view>
+    <view class="hero-copy">
+      <text class="hero-label">{{plan.actionName}}计划</text>
+      <text class="hero-title">{{plan.title}}</text>
+      <text class="hero-lunar">{{plan.weekday}} · 农历{{plan.lunar}}</text>
+    </view>
+    <view class="{{heroScoreClass}}">
+      <text>{{showProfessionalScore ? plan.score : displayLevel}}</text>
+      <text>{{showProfessionalScore ? displayLevel : '匹配等级'}}</text>
+    </view>
+  </view>
+
+  <view class="plan-basis card">
+    <view class="basis-heading">
+      <text>保存时的推荐依据</text>
+      <text class="basis-status">{{statusText}}</text>
+    </view>
+    <text class="plan-lifecycle-note" wx:if="{{lifecycleHint}}">{{lifecycleHint}}</text>
+    <text class="basis-reason">{{plan.reason}}</text>
+    <view class="basis-action"><view></view><text>{{plan.action}}</text></view>
+    <view class="basis-row"><text>推荐吉时</text><text>{{plan.recommendedTime}}</text></view>
+    <view class="basis-row" wx:if="{{plan.risk}}"><text>风险提醒</text><text>{{plan.risk}}</text></view>
+    <view class="basis-row"><text>综合依据</text><text>{{plan.basisExplanation}}</text></view>
+  </view>
+
+  <view class="edit-section">
+    <text class="section-heading">计划信息</text>
+    <view class="edit-card card">
+      <view class="field-row">
+        <text>计划名称</text>
+        <input value="{{title}}" maxlength="24" bindinput="onTitleInput" />
+      </view>
+      <view class="field-divider"></view>
+      <view class="note-field">
+        <text>备注</text>
+        <textarea value="{{note}}" maxlength="120" placeholder="例如：提前确认物品、联系人或流程" placeholder-class="note-placeholder" bindinput="onNoteInput"></textarea>
+      </view>
+    </view>
+    <button class="save-button" bindtap="savePlan">保存修改</button>
+  </view>
+
+  <view class="primary-actions">
+    <button class="poster-action" bindtap="openPoster">生成计划海报</button>
+    <button class="complete-action" bindtap="markCompleted">{{statusActionText}}</button>
+  </view>
+
+  <view class="minor-actions">
+    <button wx:if="{{isPending}}" bindtap="cancelPlan">{{cancelActionText}}</button>
+    <button bindtap="deletePlan">删除计划</button>
+  </view>
+</view>

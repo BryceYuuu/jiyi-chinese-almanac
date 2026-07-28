@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "好日子",
+  "usingComponents": {
+    "term-sheet": "/components/term-sheet/index"
+  }
+}

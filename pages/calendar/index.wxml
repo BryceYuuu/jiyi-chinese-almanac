@@ -1,0 +1,191 @@
+<view class="page-shell calendar-page {{themeClass}} {{termHelpEnabled ? 'term-help-enabled' : ''}}">
+  <image class="page-texture page-texture-top" src="{{themeTextureTop}}" mode="scaleToFill"></image>
+  <image class="page-texture page-texture-body" src="{{themeTextureBody}}" mode="scaleToFill"></image>
+  <image class="page-texture page-texture-tail" src="{{themeTextureBody}}" mode="scaleToFill"></image>
+
+  <view class="calendar-header">
+    <view>
+      <text class="page-title">日历</text>
+      <text class="page-subtitle">看见每天的节奏，也看见自己的安排。</text>
+    </view>
+  </view>
+
+  <view class="calendar-panel card">
+    <view class="month-toolbar">
+      <button class="month-arrow" data-delta="-1" bindtap="changeMonth">‹</button>
+      <text class="month-title">{{monthTitle}}</text>
+      <button class="month-arrow" data-delta="1" bindtap="changeMonth">›</button>
+    </view>
+
+    <view class="weekday-row">
+      <text wx:for="{{weekdays}}" wx:key="*this">{{item}}</text>
+    </view>
+
+    <view class="calendar-grid">
+      <view class="{{item.className}}" wx:for="{{calendarCells}}" wx:key="dateKey" data-date="{{item.dateKey}}" bindtap="selectDate">
+        <text class="cell-day">{{item.day}}</text>
+        <text class="{{item.labelClass}}">{{item.label}}</text>
+        <view class="cell-markers">
+          <view class="{{item.statusClass}}"></view>
+          <view class="cell-plan-dot" wx:if="{{item.hasPlan}}"></view>
+          <text class="cell-check" wx:if="{{item.isChecked}}">印</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="calendar-legend">
+      <view><view class="legend-dot legend-positive"></view><text>吉以上</text></view>
+      <view><view class="legend-dot legend-neutral"></view><text>中</text></view>
+      <view><view class="legend-dot legend-caution"></view><text>凶以下</text></view>
+      <view><view class="legend-plan"></view><text>有计划</text></view>
+    </view>
+  </view>
+
+  <view class="profile-prompt" bindtap="openProfile">
+    <view class="prompt-mark"></view>
+    <text>{{profileNotice}}</text>
+    <text class="prompt-arrow">›</text>
+  </view>
+
+  <view class="selected-card card" wx:if="{{selectedSummary}}">
+    <view class="selected-head">
+      <view class="selected-date-copy">
+        <text class="selected-date">{{selectedSummary.dateLine}}</text>
+        <text class="selected-lunar">{{selectedSummary.lunarLine}} · {{selectedSummary.dayOfficer}}</text>
+      </view>
+      <view class="selected-rhythm {{selectedSummary.ratingClass}}">
+        <text class="selected-grade">{{selectedSummary.grade}}</text>
+        <text>{{selectedSummary.rhythm}}</text>
+      </view>
+    </view>
+
+    <block wx:if="{{showFriendly}}">
+      <view class="day-advice-row">
+        <text class="day-advice-label day-advice-good">适合</text>
+        <view class="day-tags">
+          <text class="day-tag day-tag-good" wx:for="{{selectedSummary.suitable}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+      <view class="detail-divider"></view>
+      <view class="day-advice-row">
+        <text class="day-advice-label">注意</text>
+        <view class="day-tags">
+          <text class="day-tag" wx:for="{{selectedSummary.avoid}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+      <text class="selected-reminder">{{selectedSummary.reminder}}</text>
+      <view class="selected-inspiration" wx:if="{{selectedInspiration}}">
+        <text class="selected-inspiration-label">当日灵感</text>
+        <text class="selected-inspiration-title">{{selectedInspiration.keyword}}</text>
+        <text class="selected-inspiration-copy">{{selectedInspiration.action}}</text>
+      </view>
+    </block>
+
+    <view class="pro-dashboard pro-dashboard-embedded" wx:if="{{showProfessional}}">
+      <view class="pro-header">
+        <view class="pro-heading-copy">
+          <text class="pro-eyebrow">当日日课</text>
+          <text class="pro-title">专业黄历参数</text>
+          <text class="pro-ganzhi">{{selectedSummary.professional.ganZhiLine}}</text>
+        </view>
+        <view class="{{selectedSummary.professional.tianShenClass}} pro-term-trigger" data-term="值神" data-value="{{selectedSummary.professional.tianShen}}" bindtap="openTerm">
+          <text>{{selectedSummary.professional.tianShenLuck}}</text>
+          <text>{{selectedSummary.professional.tianShenName}}</text>
+        </view>
+      </view>
+
+      <view class="pro-almanac">
+        <view class="pro-almanac-row">
+          <text class="pro-almanac-label">宜</text>
+          <view class="pro-tag-list"><text class="pro-tag" wx:for="{{selectedSummary.professional.yi}}" wx:key="*this">{{item}}</text></view>
+        </view>
+        <view class="pro-almanac-row">
+          <text class="pro-almanac-label pro-almanac-label-avoid">忌</text>
+          <view class="pro-tag-list"><text class="pro-tag pro-tag-avoid" wx:for="{{selectedSummary.professional.ji}}" wx:key="*this">{{item}}</text></view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading">
+          <text class="pro-section-title">日课核心</text>
+          <text class="pro-section-meta">{{selectedSummary.professional.zhiXing}} · {{selectedSummary.professional.xiu}}</text>
+        </view>
+        <view class="pro-core-grid">
+          <view class="pro-core-item pro-term-trigger" wx:for="{{selectedSummary.professional.coreFacts}}" wx:key="label" data-term="{{item.label}}" data-value="{{item.value}} · {{item.detail}}" bindtap="openTerm">
+            <view class="pro-fact-label-row"><text class="pro-fact-label">{{item.label}}</text><text class="pro-term-mark">?</text></view>
+            <text class="pro-fact-value">{{item.value}}</text>
+            <text class="pro-fact-detail">{{item.detail}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading"><text class="pro-section-title">神煞参断</text><text class="pro-section-meta">择日辅助</text></view>
+        <view class="pro-shen-group">
+          <view class="pro-shen-label-row pro-term-trigger" data-term="吉神" data-value="{{selectedSummary.professional.jiShen}}" bindtap="openTerm"><text class="pro-shen-label">吉神宜趋</text><text class="pro-term-mark">?</text></view>
+          <view class="pro-shen-tags"><text class="pro-shen-tag pro-shen-tag-good" wx:for="{{selectedSummary.professional.jiShen}}" wx:key="*this">{{item}}</text></view>
+        </view>
+        <view class="pro-shen-group">
+          <view class="pro-shen-label-row pro-term-trigger" data-term="凶煞" data-value="{{selectedSummary.professional.xiongSha}}" bindtap="openTerm"><text class="pro-shen-label">凶煞宜忌</text><text class="pro-term-mark">?</text></view>
+          <view class="pro-shen-tags"><text class="pro-shen-tag" wx:for="{{selectedSummary.professional.xiongSha}}" wx:key="*this">{{item}}</text></view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading"><text class="pro-section-title">冲煞与方位</text><text class="pro-section-meta">日生肖 {{selectedSummary.professional.dayShengXiao}}</text></view>
+        <view class="pro-personal-relation pro-term-trigger {{selectedSummary.personalRelation.className}}" wx:if="{{selectedSummary.personalRelation}}" data-term="四柱关系" data-value="{{selectedSummary.personalRelation.shortText}}" bindtap="openTerm">
+          <view class="pro-personal-copy">
+            <text class="pro-personal-label">与你的出生资料</text>
+            <text class="pro-personal-value">{{selectedSummary.personalRelation.shortText}}</text>
+          </view>
+          <text class="pro-personal-badge">{{selectedSummary.personalRelation.label}}</text>
+        </view>
+        <view class="pro-chong-row pro-term-trigger" data-term="冲煞" data-value="{{selectedSummary.professional.chongSha}}" bindtap="openTerm"><view class="pro-row-label"><text>日冲煞</text><text class="pro-term-mark">?</text></view><text>{{selectedSummary.professional.chongSha}}</text></view>
+        <view class="pro-position-grid">
+          <view class="pro-position-item" wx:for="{{selectedSummary.professional.positionFacts}}" wx:key="label">
+            <text class="pro-position-label">{{item.label}}</text><text class="pro-position-value">{{item.value}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading"><text class="pro-section-title">历法细目</text><text class="pro-section-meta">{{selectedSummary.professional.wuHou}}</text></view>
+        <view class="pro-observation-list">
+          <view class="pro-observation-row pro-term-trigger" wx:for="{{selectedSummary.professional.observationFacts}}" wx:key="label" data-term="{{item.label}}" data-value="{{item.value}}" bindtap="openTerm">
+            <view class="pro-row-label"><text class="pro-observation-label">{{item.label}}</text><text class="pro-term-mark">?</text></view><text class="pro-observation-value">{{item.value}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading pro-term-trigger" data-term="时辰吉凶" data-value="当日共{{selectedSummary.professional.timeDetails.length}}个时段" bindtap="openTerm"><view class="pro-section-title-row"><text class="pro-section-title">时辰吉凶</text><text class="pro-term-mark">?</text></view><text class="pro-section-meta">十三时段</text></view>
+        <scroll-view class="pro-time-scroll" scroll-x="true" enhanced="true" show-scrollbar="{{false}}">
+          <view class="pro-time-list">
+            <view class="pro-time-item" wx:for="{{selectedSummary.professional.timeDetails}}" wx:key="key">
+              <view class="pro-time-head"><text class="pro-time-zhi">{{item.zhi}}</text><text class="{{item.luckClass}}">{{item.luck}}</text></view>
+              <text class="pro-time-range">{{item.range}}</text>
+              <text class="pro-time-meta">{{item.ganZhi}} · {{item.tianShen}}</text>
+              <text class="pro-time-chong">{{item.chongSha}}</text>
+              <view class="pro-time-line"><text>宜</text><text>{{item.yiText}}</text></view>
+              <view class="pro-time-line pro-time-line-avoid"><text>忌</text><text>{{item.jiText}}</text></view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+
+    <view class="selected-actions">
+      <button class="poster-button" bindtap="openPoster">生成当日卡片</button>
+      <button class="{{checkinClass}}" wx:if="{{isSelectedToday}}" bindtap="handleCheckin">{{checkinText}}</button>
+    </view>
+
+    <view class="selected-plans" wx:if="{{hasSelectedPlans}}">
+      <text class="selected-plans-title">当天计划</text>
+      <view class="selected-plan-row" wx:for="{{selectedPlans}}" wx:key="id" data-id="{{item.id}}" bindtap="openPlan">
+        <text>{{item.title}}</text>
+        <view><text>{{item.statusText}}</text><text class="selected-plan-arrow">›</text></view>
+      </view>
+    </view>
+  </view>
+  <term-sheet visible="{{showTermSheet}}" term="{{activeTerm}}" bindclose="closeTerm" />
+</view>

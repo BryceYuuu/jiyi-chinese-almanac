@@ -1,0 +1,127 @@
+<view class="page-shell setup-page {{themeClass}}">
+  <view class="brand-row">
+    <view class="brand-seal">吉</view>
+    <text class="brand-name">吉易</text>
+    <text class="local-badge">仅本机保存</text>
+  </view>
+
+  <view class="setup-header">
+    <text class="setup-title">{{setupTitle}}</text>
+    <text class="setup-subtitle">{{setupSubtitle}}</text>
+  </view>
+
+  <view class="form-card card {{isBirthFocus ? 'form-card-birth-focus' : ''}}">
+    <view class="form-section">
+      <text class="section-label">{{basicSectionTitle}}</text>
+      <text class="section-help birth-section-help" wx:if="{{isBirthFocus}}">日期与时间仅用于整理本地历法资料，不会上传。</text>
+
+      <block wx:if="{{!isBirthFocus}}">
+        <view class="avatar-editor">
+          <button class="avatar-button" bindtap="chooseAvatar">
+            <image class="avatar-preview" wx:if="{{hasAvatar}}" src="{{avatarPreviewPath}}" mode="aspectFill" binderror="onAvatarError" />
+            <view class="avatar-placeholder" wx:else>{{avatarText}}</view>
+            <view class="avatar-change">更换</view>
+          </button>
+          <view class="avatar-copy">
+            <text class="avatar-title">头像</text>
+            <text class="avatar-desc">从相册选择图片，并裁剪为正方形</text>
+          </view>
+        </view>
+
+        <view class="field-block">
+          <text class="field-label">称呼 <text class="optional">选填</text></text>
+          <input class="field-control" value="{{nickname}}" placeholder="例如：清欢" placeholder-class="input-placeholder" bindinput="onNicknameInput" />
+        </view>
+      </block>
+
+      <view class="field-block">
+        <text class="field-label">出生日期 <text class="optional" wx:if="{{!isBirthFocus}}">选填</text></text>
+        <picker mode="date" value="{{birthday}}" start="1920-01-01" end="{{birthdayEnd}}" bindchange="onBirthdayChange">
+          <view class="{{birthdayPickerClass}}">
+            <text>{{birthdayText}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="field-block">
+        <view class="field-label-row">
+          <text class="field-label">出生时间 <text class="optional" wx:if="{{!isBirthFocus}}">选填</text></text>
+          <button class="field-clear" wx:if="{{hasBirthTime}}" catchtap="clearBirthTime">暂不填写</button>
+        </view>
+        <picker mode="time" value="{{birthTime}}" start="00:00" end="23:59" bindchange="onBirthTimeChange">
+          <view class="{{birthTimePickerClass}}">
+            <text>{{birthTimeText}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+        <text class="field-help">{{birthTimeHelpText}}</text>
+      </view>
+
+      <view class="zodiac-row" wx:if="{{zodiac}}">
+        <text class="zodiac-label">生肖</text>
+        <text class="zodiac-value">{{zodiac}}</text>
+      </view>
+
+      <view class="bazi-preview" wx:if="{{hasBirthChart}}">
+        <view class="bazi-preview-head">
+          <view>
+            <text class="bazi-preview-title">出生资料已完善</text>
+            <text class="bazi-preview-desc">{{birthChartDayMaster}} · 本地日期参考</text>
+          </view>
+          <text class="bazi-preview-badge">本地计算</text>
+        </view>
+        <view class="bazi-pillars">
+          <view class="bazi-pillar" wx:for="{{birthChartPillars}}" wx:key="key">
+            <text class="bazi-pillar-label">{{item.label}}</text>
+            <text class="bazi-pillar-value">{{item.value}}</text>
+            <text class="bazi-pillar-element">{{item.wuXing}}</text>
+          </view>
+        </view>
+        <text class="bazi-elements">{{birthChartElements}}</text>
+      </view>
+
+      <view class="bazi-empty-preview" wx:if="{{isBirthFocus && !hasBirthChart}}">
+        <view class="bazi-empty-seal">历</view>
+        <view class="bazi-empty-copy">
+          <text class="bazi-empty-title">等待完善出生资料</text>
+          <text class="bazi-empty-desc">选择完整的出生日期和时间后，将在这里显示。</text>
+        </view>
+      </view>
+    </view>
+
+    <block wx:if="{{!isBirthFocus}}">
+      <view class="form-divider"></view>
+
+      <view class="form-section">
+        <text class="section-label">显示偏好</text>
+        <text class="section-help">以后也可以在“我的”里修改</text>
+        <view class="setup-mode">
+          <button class="{{friendlyClass}}" data-mode="friendly" bindtap="switchMode">
+            <text class="mode-name">友好版</text>
+            <text class="mode-desc">现代语言，重点更清楚</text>
+          </button>
+          <button class="{{professionalClass}}" data-mode="professional" bindtap="switchMode">
+            <text class="mode-name">专业版</text>
+            <text class="mode-desc">完整宜忌与传统信息</text>
+          </button>
+        </view>
+      </view>
+
+      <view class="form-divider"></view>
+
+      <view class="avoid-row">
+        <view class="avoid-copy">
+          <text class="avoid-title">个性化日期筛选</text>
+          <text class="avoid-desc">选择日期时结合你的资料调整候选顺序</text>
+        </view>
+        <switch checked="{{hasBirthday && avoidOwnChong}}" disabled="{{!hasBirthday}}" color="{{themeColor}}" bindchange="onAvoidChange" />
+      </view>
+    </block>
+  </view>
+
+  <text class="birth-required-copy" wx:if="{{isBirthFocus && !hasBirthChart}}">请选择出生日期和出生时间后保存</text>
+  <button class="{{saveButtonClass}}" loading="{{isSaving}}" disabled="{{!canSave || isSaving}}" bindtap="save">{{saveButtonText}}</button>
+
+  <text class="privacy-copy">生日和出生时间仅使用微信本地缓存，不会上传至服务器。</text>
+</view>

@@ -1,0 +1,68 @@
+<view class="page-shell poster-page {{themeClass}}" wx:if="{{content}}">
+  <view class="poster-header">
+    <text class="page-title">生成海报</text>
+    <text class="page-subtitle">日期、事项和版式共同决定画面，每张都有变化。</text>
+  </view>
+
+  <view class="style-picker">
+    <button class="{{item.className}}" wx:for="{{styleOptions}}" wx:key="key" data-key="{{item.key}}" bindtap="selectStyle">
+      <view class="style-preview">
+        <image class="style-preview-image" src="{{item.previewPath}}" mode="aspectFill" />
+      </view>
+      <text>{{item.name}}</text>
+    </button>
+  </view>
+
+  <view class="canvas-frame">
+    <canvas id="posterCanvas" type="2d" class="poster-canvas poster-canvas-rendering"></canvas>
+    <view class="instant-poster instant-poster-{{selectedStyle}}" wx:if="{{!previewPath}}">
+      <image class="instant-poster-bg" src="{{activeBackgroundPath}}" mode="aspectFill" />
+      <view class="instant-poster-wash"></view>
+      <image class="instant-poster-motif" src="{{activeMotifPath}}" mode="aspectFill" />
+      <view class="instant-editorial-card">
+        <view class="instant-editorial-header">
+          <view class="instant-editorial-seal"><text>吉</text><text>易</text></view>
+          <view class="instant-editorial-eyebrow"><text>{{content.eyebrow}}</text><view></view></view>
+        </view>
+
+        <view class="instant-editorial-hero">
+          <view class="instant-editorial-date">
+            <text>{{content.day}}</text>
+            <text>{{content.monthDay}}</text>
+            <text>{{content.lunar}}</text>
+          </view>
+          <view class="instant-editorial-divider"><view></view></view>
+          <view class="instant-editorial-title">
+            <text class="instant-editorial-headline">{{content.headline}}</text>
+            <view class="instant-editorial-title-value {{titleSizeClass}}">
+              <text>{{content.title}}</text>
+            </view>
+          </view>
+          <view class="instant-editorial-quote"><text>“</text><text>{{content.primary}}</text></view>
+        </view>
+
+        <view class="instant-editorial-suitable">
+          <view class="instant-editorial-leaf">叶</view>
+          <text>{{content.kind === 'daily' ? '今日适合' : '推荐信息'}}</text>
+          <view></view>
+          <text>{{content.secondary}}</text>
+        </view>
+
+        <view class="instant-editorial-reminder">
+          <view class="instant-editorial-reminder-title"><text>铃</text><text>{{content.kind === 'daily' ? '行事提醒' : '计划提醒'}}</text></view>
+          <view class="instant-editorial-reminder-line"></view>
+          <text class="instant-editorial-reminder-copy">{{content.footer}}</text>
+          <image class="instant-editorial-motif" src="{{activeMotifPath}}" mode="aspectFill" />
+        </view>
+
+        <view class="instant-editorial-footer"><view></view><text>吉易 · 每日生活参考</text><view></view></view>
+      </view>
+    </view>
+    <image class="poster-preview" wx:if="{{previewPath}}" src="{{previewPath}}" mode="widthFix" binderror="handlePreviewError" />
+  </view>
+
+  <view class="share-action-bar">
+    <button class="primary-button share-poster-button" loading="{{isExporting}}" disabled="{{!isReady || isExporting}}" bindtap="sharePoster">{{shareButtonText}}</button>
+    <text class="poster-note">{{isReady ? '海报仅在当前设备生成，不会上传图片或个人资料。' : '画面已呈现，正在准备高清分享图片…'}}</text>
+  </view>
+</view>
