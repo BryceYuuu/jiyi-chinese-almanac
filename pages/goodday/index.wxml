@@ -1,0 +1,220 @@
+<view class="page-shell goodday-page {{themeClass}} {{termHelpEnabled ? 'term-help-enabled' : ''}}">
+  <image class="page-texture page-texture-top" src="{{themeTextureTop}}" mode="scaleToFill"></image>
+  <image class="page-texture page-texture-body" src="{{themeTextureBody}}" mode="scaleToFill"></image>
+  <image class="page-texture page-texture-tail" src="{{themeTextureBody}}" mode="scaleToFill"></image>
+
+  <view class="page-head">
+    <text class="page-title">找个好日子</text>
+    <text class="page-subtitle">先说明要做什么，再按你的真实时间条件筛选。</text>
+  </view>
+
+  <view class="profile-filter" bindtap="openProfile">
+    <view class="filter-dot"></view>
+    <text>{{filterText}}</text>
+    <text class="filter-arrow">›</text>
+  </view>
+
+  <view class="selection-panel card">
+    <text class="selection-title">要做什么</text>
+    <view class="scene-grid">
+      <view class="{{item.className}}" wx:for="{{sceneOptions}}" wx:key="key" data-key="{{item.key}}" bindtap="selectScene">
+        <image class="scene-icon" src="{{item.iconPath}}" mode="aspectFit" />
+        <text class="scene-name">{{item.name}}</text>
+      </view>
+    </view>
+
+    <view class="custom-panel" wx:if="{{showCustom}}">
+      <input class="custom-input" value="{{customTaskName}}" maxlength="24" placeholder="例如：签合同、第一次见家长" placeholder-class="input-placeholder" bindinput="onCustomTaskInput" />
+      <view class="custom-label-row">
+        <text class="custom-label">这件事更接近</text>
+        <text class="rule-source">{{ruleSourceText}}</text>
+      </view>
+      <view class="rule-grid">
+        <text class="{{item.className}}" wx:for="{{customRuleOptions}}" wx:key="key" data-key="{{item.key}}" bindtap="selectCustomRule">{{item.name}}</text>
+      </view>
+      <view class="rule-confirmation">
+        <view class="rule-confirm-head">
+          <view>
+            <text class="rule-confirm-title">{{customRuleName}}规则</text>
+            <text class="rule-confirm-focus">{{customRuleFocus}}</text>
+          </view>
+          <text class="rule-confirm-state">已选择</text>
+        </view>
+        <view class="rule-detail-row">
+          <text class="rule-detail-label rule-detail-positive">宜中加分</text>
+          <text class="rule-detail-copy">{{customRuleMatch}}</text>
+        </view>
+        <view class="rule-detail-row">
+          <text class="rule-detail-label rule-detail-negative">冲突处理</text>
+          <text class="rule-detail-copy">{{customRuleExcludeText}}</text>
+        </view>
+        <view class="rule-detail-row" wx:if="{{customRuleHasPenalty}}">
+          <text class="rule-detail-label rule-detail-neutral">降低排名</text>
+          <text class="rule-detail-copy">{{customRulePenaltyText}}</text>
+        </view>
+        <text class="rule-method">另结合建除日值、值神、吉时与个人避冲综合排序。</text>
+        <text class="rule-hint">适用场景：{{customRuleHint}}</text>
+      </view>
+    </view>
+
+    <view class="selection-divider"></view>
+
+    <view class="range-heading">
+      <text class="selection-title">时间范围</text>
+      <text class="range-caption">{{rangeText}}</text>
+    </view>
+    <view class="range-row range-row-four">
+      <text class="{{item.className}}" wx:for="{{rangeOptions}}" wx:key="key" data-key="{{item.key}}" data-range="{{item.value}}" bindtap="selectRange">{{item.label}}</text>
+    </view>
+
+    <view class="custom-range" wx:if="{{selectedRangeKey === 'custom'}}">
+      <picker mode="date" value="{{customStartDate}}" start="{{dateMin}}" end="{{dateMax}}" bindchange="onStartDateChange">
+        <view class="date-field"><text>开始</text><text>{{customStartDate}}</text></view>
+      </picker>
+      <view class="range-line"></view>
+      <picker mode="date" value="{{customEndDate}}" start="{{customStartDate}}" end="{{customEndMax}}" bindchange="onEndDateChange">
+        <view class="date-field"><text>结束</text><text>{{customEndDate}}</text></view>
+      </picker>
+    </view>
+
+    <text class="constraint-label">日期类型</text>
+    <view class="constraint-row">
+      <text class="{{item.className}}" wx:for="{{dayTypeOptions}}" wx:key="key" data-key="{{item.key}}" bindtap="selectDayType">{{item.name}}</text>
+    </view>
+
+    <button class="advanced-toggle" bindtap="toggleAdvanced">
+      <text>{{advancedText}}</text>
+      <text>{{showAdvanced ? '−' : '+'}}</text>
+    </button>
+
+    <view class="advanced-panel" wx:if="{{showAdvanced}}">
+      <text class="constraint-label advanced-label">偏好时段</text>
+      <view class="period-row">
+        <text class="{{item.className}}" wx:for="{{periodOptions}}" wx:key="key" data-key="{{item.key}}" bindtap="selectPeriod">{{item.name}}</text>
+      </view>
+
+      <view class="exclude-heading">
+        <view>
+          <text class="constraint-label">排除日期</text>
+          <text class="exclude-help">最多保留在本次查找条件中</text>
+        </view>
+        <picker mode="date" value="{{excludePickerDate}}" start="{{dateMin}}" end="{{dateMax}}" bindchange="onExcludeDateChange">
+          <view class="exclude-add">+ 添加</view>
+        </picker>
+      </view>
+      <view class="excluded-list" wx:if="{{excludedDateOptions.length}}">
+        <button wx:for="{{excludedDateOptions}}" wx:key="dateKey" data-date="{{item.dateKey}}" bindtap="removeExcludedDate">{{item.label}} ×</button>
+      </view>
+    </view>
+  </view>
+
+  <button class="primary-button search-button" loading="{{isSearching}}" disabled="{{isSearching}}" bindtap="searchGoodDays">{{searchButtonText}}</button>
+
+  <view class="results" wx:if="{{hasSearched}}">
+    <view class="result-heading">
+      <text class="result-title">{{resultTitle}}</text>
+      <text class="result-subtitle">{{resultSubtitle}}</text>
+      <text class="result-rule-text">{{resultRuleText}}</text>
+    </view>
+
+    <block wx:for="{{results}}" wx:key="id">
+      <view class="result-card card" wx:if="{{index < visibleResultCount}}">
+        <view class="result-topline">
+          <text class="result-rank">推荐 {{item.rank}}</text>
+          <view class="result-score">
+            <view class="result-score-copy"><text>事项匹配</text><text class="result-score-value">{{item.score}}分</text></view>
+            <text class="{{item.levelClass}}">{{item.displayLevel}}</text>
+          </view>
+        </view>
+
+        <view class="result-date-row">
+          <text class="result-day">{{item.day}}</text>
+          <view class="result-date-meta">
+            <text class="result-date-line">{{item.date}} · {{item.weekday}}</text>
+            <text class="result-lunar">农历{{item.lunar}}</text>
+          </view>
+          <text class="{{item.dayStatusClass}}">总体 {{item.dayGrade}} · {{item.dayRhythm}}</text>
+        </view>
+
+        <view class="result-answers">
+          <view class="result-answer">
+            <text class="result-answer-label">为什么推荐</text>
+            <text class="result-answer-value">{{item.whyRecommended}}</text>
+          </view>
+          <view class="result-answer">
+            <text class="result-answer-label">最适合做什么</text>
+            <text class="result-answer-value">{{item.bestAction}}</text>
+          </view>
+          <view class="result-answer">
+            <text class="result-answer-label">最好在什么时间做</text>
+            <text class="result-answer-value">{{item.bestTime}}</text>
+          </view>
+          <view class="result-answer result-answer-risk">
+            <text class="result-answer-label">哪个风险需要注意</text>
+            <text class="result-answer-value">{{item.riskNotice}}</text>
+          </view>
+        </view>
+
+        <button class="detail-button" data-index="{{index}}" bindtap="toggleResultDetail">{{item.detailText}}</button>
+
+        <view class="result-detail" wx:if="{{item.expanded}}">
+          <view class="score-breakdown" wx:if="{{showProfessionalScores}}">
+            <view class="score-breakdown-head"><text>综合评分</text><text>{{item.score}} / 100 · {{item.displayLevel}}</text></view>
+            <view class="score-breakdown-grid">
+              <view class="score-breakdown-item" wx:for="{{item.scoreBreakdown}}" wx:key="label" wx:for-item="metric">
+                <text>{{metric.label}}</text><text>{{metric.value}}</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="evidence-group evidence-positive">
+            <text class="evidence-title">正向命中</text>
+            <view class="{{evidence.termClass}}" wx:for="{{item.positiveEvidence}}" wx:key="label" wx:for-item="evidence" data-term="{{evidence.termKey}}" data-value="{{evidence.value}}" bindtap="openTerm">
+              <text class="detail-label">{{evidence.label}}<text class="evidence-term-mark" wx:if="{{termHelpEnabled && evidence.termKey}}">?</text></text><text class="detail-value">{{evidence.value}}</text>
+            </view>
+          </view>
+
+          <view class="evidence-group">
+            <text class="evidence-title">中性条件</text>
+            <view class="{{evidence.termClass}}" wx:for="{{item.neutralEvidence}}" wx:key="label" wx:for-item="evidence" data-term="{{evidence.termKey}}" data-value="{{evidence.value}}" bindtap="openTerm">
+              <text class="detail-label">{{evidence.label}}<text class="evidence-term-mark" wx:if="{{termHelpEnabled && evidence.termKey}}">?</text></text><text class="detail-value">{{evidence.value}}</text>
+            </view>
+          </view>
+
+          <view class="evidence-group evidence-risk">
+            <text class="evidence-title">风险与避冲</text>
+            <view class="{{evidence.termClass}}" wx:for="{{item.conflictEvidence}}" wx:key="label" wx:for-item="evidence" data-term="{{evidence.termKey}}" data-value="{{evidence.value}}" bindtap="openTerm">
+              <text class="detail-label">{{evidence.label}}<text class="evidence-term-mark" wx:if="{{termHelpEnabled && evidence.termKey}}">?</text></text><text class="detail-value">{{evidence.value}}</text>
+            </view>
+          </view>
+
+          <view class="evidence-group">
+            <text class="evidence-title">个人条件</text>
+            <view class="evidence-row" wx:for="{{item.personalEvidence}}" wx:key="label" wx:for-item="evidence">
+              <text class="detail-label">{{evidence.label}}</text><text class="detail-value">{{evidence.value}}</text>
+            </view>
+          </view>
+          <view class="detail-note">{{item.caution}}</view>
+        </view>
+
+        <view class="result-actions">
+          <view class="result-action-slot">
+            <view class="poster-result-button" role="button" aria-label="生成海报" data-index="{{index}}" bindtap="generateResultPoster">生成海报</view>
+          </view>
+          <view class="result-action-slot">
+            <view class="save-plan-button" role="button" aria-label="加入计划" data-index="{{index}}" bindtap="saveResultPlan">加入计划</view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <button class="more-results-button" wx:if="{{hasMoreResults}}" bindtap="toggleMoreResults">{{moreResultsText}}</button>
+
+    <view class="empty-state" wx:if="{{results.length === 0}}">
+      <text class="empty-title">没有找到足够匹配的日期</text>
+      <text class="empty-desc">尝试放宽日期类型、偏好时段或时间范围。</text>
+    </view>
+  </view>
+
+  <term-sheet visible="{{showTermSheet}}" term="{{activeTerm}}" bindclose="closeTerm" />
+</view>

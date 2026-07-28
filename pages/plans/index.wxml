@@ -1,0 +1,96 @@
+<view class="page-shell plans-page {{themeClass}}">
+  <view class="plans-header">
+    <text class="page-title">我的计划</text>
+    <text class="page-subtitle">把选好的日子，变成真正要完成的事。</text>
+  </view>
+
+  <view class="next-plan card" wx:if="{{nextPlan}}" data-id="{{nextPlan.id}}" bindtap="openPlan">
+    <view class="next-plan-label">{{nextPlanLabel}}</view>
+    <view class="next-plan-content">
+      <view class="next-date">
+        <text class="next-day">{{nextPlan.day}}</text>
+        <text>{{nextPlan.month}}</text>
+      </view>
+      <view class="next-copy">
+        <text class="next-title">{{nextPlan.title}}</text>
+        <text class="next-meta">{{nextPlan.date}} · {{nextPlan.recommendedTime}}</text>
+      </view>
+      <text class="next-countdown">{{nextPlan.countdown}}</text>
+    </view>
+  </view>
+
+  <view class="plan-summary" wx:if="{{hasPlans}}">
+    <view><text>{{pendingCount}}</text><text>待进行</text></view>
+    <view class="summary-divider"></view>
+    <view><text>{{todayCount}}</text><text>今日</text></view>
+    <view class="summary-divider"></view>
+    <view><text>{{endedCount}}</text><text>已结束</text></view>
+  </view>
+
+  <view class="plan-section" wx:if="{{hasToday}}">
+    <text class="section-heading">今日</text>
+    <view class="plan-list card">
+      <view class="plan-row" wx:for="{{todayPlans}}" wx:key="id" data-id="{{item.id}}" bindtap="openPlan">
+        <view class="plan-date-block">
+          <text class="plan-day">{{item.day}}</text>
+          <text>{{item.month}}</text>
+        </view>
+        <view class="plan-copy">
+          <text class="plan-title">{{item.title}}</text>
+          <text class="plan-meta">{{item.actionName}} · {{item.countdown}}</text>
+        </view>
+        <view class="plan-side">
+          <text class="{{item.statusClass}}">{{item.statusText}}</text>
+          <text class="plan-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="plan-section" wx:if="{{hasPending}}">
+    <text class="section-heading">待进行</text>
+    <view class="plan-list card">
+      <view class="plan-row" wx:for="{{pendingPlans}}" wx:key="id" data-id="{{item.id}}" bindtap="openPlan">
+        <view class="plan-date-block">
+          <text class="plan-day">{{item.day}}</text>
+          <text>{{item.month}}</text>
+        </view>
+        <view class="plan-copy">
+          <text class="plan-title">{{item.title}}</text>
+          <text class="plan-meta">{{item.actionName}} · {{item.countdown}}</text>
+        </view>
+        <view class="plan-side">
+          <text class="{{item.statusClass}}">{{item.statusText}}</text>
+          <text class="plan-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="plan-section" wx:if="{{hasEnded}}">
+    <text class="section-heading">已结束</text>
+    <view class="plan-list card">
+      <view class="plan-row" wx:for="{{endedPlans}}" wx:key="id" data-id="{{item.id}}" bindtap="openPlan">
+        <view class="plan-date-block plan-date-muted">
+          <text class="plan-day">{{item.day}}</text>
+          <text>{{item.month}}</text>
+        </view>
+        <view class="plan-copy">
+          <text class="plan-title">{{item.title}}</text>
+          <text class="plan-meta">{{item.date}} · {{item.actionName}}</text>
+        </view>
+        <view class="plan-side">
+          <text class="{{item.statusClass}}">{{item.statusText}}</text>
+          <text class="plan-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="plans-empty" wx:if="{{!hasPlans}}">
+    <view class="empty-seal">计</view>
+    <text class="empty-title">还没有计划</text>
+    <text class="empty-copy">找好日子后保存计划，日期和行动会出现在这里。</text>
+    <button class="primary-button empty-action" bindtap="startSearch">去找好日子</button>
+  </view>
+</view>

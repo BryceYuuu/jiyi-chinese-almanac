@@ -1,0 +1,424 @@
+.calendar-page {
+  padding-top: 20rpx;
+}
+
+.calendar-cell:active,
+.profile-prompt:active,
+.selected-plan-row:active {
+  opacity: 0.72;
+}
+
+.calendar-header {
+  display: block;
+}
+
+.calendar-header .page-title {
+  font-size: 46rpx;
+}
+
+.calendar-header .page-subtitle {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  white-space: nowrap;
+}
+
+.calendar-panel {
+  margin-top: 28rpx;
+  padding: 22rpx 18rpx 18rpx;
+}
+
+.month-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 88rpx;
+  padding: 0 4rpx;
+}
+
+.month-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88rpx;
+  height: 88rpx;
+  color: var(--color-muted);
+  font-size: 42rpx;
+  line-height: 1;
+}
+
+.month-title {
+  color: var(--color-text);
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.weekday-row,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.weekday-row {
+  margin-top: 8rpx;
+  padding: 10rpx 0;
+  color: var(--color-subtle);
+  font-size: 22rpx;
+  text-align: center;
+}
+
+.calendar-grid {
+  border-top: 1rpx solid var(--color-line);
+}
+
+.calendar-cell {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 96rpx;
+  flex-direction: column;
+  align-items: center;
+  padding: 12rpx 2rpx 8rpx;
+  border-radius: 10rpx;
+}
+
+.calendar-cell-outside {
+  opacity: 0.34;
+}
+
+.calendar-cell-selected {
+  background: var(--color-primary-soft);
+}
+
+.calendar-cell-today .cell-day {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.calendar-cell-selected .cell-day {
+  color: var(--color-primary);
+}
+
+.cell-day {
+  color: var(--color-text);
+  font-family: "Bodoni 72", "Didot", "Georgia", serif;
+  font-size: 29rpx;
+  line-height: 1;
+}
+
+.cell-lunar {
+  display: block;
+  width: 100%;
+  margin-top: 8rpx;
+  overflow: hidden;
+  color: var(--color-subtle);
+  font-size: 22rpx;
+  line-height: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell-festival {
+  color: var(--color-secondary);
+}
+
+.cell-markers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5rpx;
+  min-height: 18rpx;
+  margin-top: 8rpx;
+}
+
+.cell-status,
+.cell-plan-dot,
+.legend-dot,
+.legend-plan {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+}
+
+.cell-status-positive,
+.legend-positive {
+  background: var(--color-status-positive);
+}
+
+.cell-status-neutral,
+.legend-neutral {
+  background: var(--color-status-neutral);
+}
+
+.cell-status-caution,
+.legend-caution {
+  background: var(--color-status-caution);
+}
+
+.cell-plan-dot,
+.legend-plan {
+  border: 2rpx solid var(--color-primary);
+  background: transparent;
+}
+
+.cell-check {
+  color: var(--color-primary);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 22rpx;
+  line-height: 1;
+}
+
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22rpx;
+  margin-top: 12rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid var(--color-line);
+}
+
+.calendar-legend > view {
+  display: flex;
+  align-items: center;
+  gap: 7rpx;
+  color: var(--color-subtle);
+  font-size: 22rpx;
+}
+
+.profile-prompt {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-top: 18rpx;
+  min-height: 88rpx;
+  padding: 16rpx 4rpx;
+  color: var(--color-muted);
+  font-size: 22rpx;
+}
+
+.prompt-mark {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.prompt-arrow {
+  margin-left: auto;
+  color: var(--color-subtle);
+  font-size: 30rpx;
+}
+
+.selected-card {
+  margin-top: 4rpx;
+  padding: 28rpx;
+}
+
+.selected-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.selected-date-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.selected-date {
+  color: var(--color-text);
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.selected-lunar {
+  margin-top: 8rpx;
+  color: var(--color-muted);
+  font-size: 22rpx;
+}
+
+.selected-rhythm {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex: 0 0 auto;
+  font-size: 23rpx;
+  font-weight: 600;
+}
+
+.selected-rhythm.rating-positive {
+  color: var(--color-status-positive);
+}
+
+.selected-rhythm.rating-neutral {
+  color: var(--color-status-neutral);
+}
+
+.selected-rhythm.rating-caution {
+  color: var(--color-status-caution);
+}
+
+.selected-grade {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48rpx;
+  height: 48rpx;
+  padding: 0 7rpx;
+  border: 1rpx solid currentColor;
+  border-radius: 8rpx;
+  font-family: "Songti SC", "STSong", serif;
+}
+
+.day-advice-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 18rpx;
+  padding: 24rpx 0;
+}
+
+.day-advice-label {
+  flex: 0 0 58rpx;
+  padding-top: 6rpx;
+  color: var(--color-muted);
+  font-size: 23rpx;
+  font-weight: 600;
+}
+
+.day-advice-good {
+  color: var(--color-primary);
+}
+
+.day-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+}
+
+.day-tag {
+  padding: 9rpx 15rpx;
+  border-radius: 14rpx;
+  background: #F1EEE9;
+  color: var(--color-muted);
+  font-size: 22rpx;
+}
+
+.day-tag-good {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.detail-divider {
+  height: 1rpx;
+  background: var(--color-line);
+}
+
+.selected-reminder {
+  display: block;
+  padding: 2rpx 0 2rpx 18rpx;
+  border-left: 4rpx solid var(--color-secondary);
+  color: var(--color-text);
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
+.selected-inspiration {
+  display: flex;
+  margin-top: 22rpx;
+  flex-direction: column;
+  padding-top: 20rpx;
+  border-top: 1rpx solid var(--color-line);
+}
+
+.selected-inspiration-label {
+  color: var(--color-muted);
+  font-size: 22rpx;
+}
+
+.selected-inspiration-title {
+  margin-top: 7rpx;
+  color: var(--color-text);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 31rpx;
+  font-weight: 600;
+}
+
+.selected-inspiration-copy {
+  margin-top: 7rpx;
+  color: var(--color-muted);
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.selected-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 26rpx;
+}
+
+.poster-button,
+.checkin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 88rpx;
+  flex: 1;
+  border-radius: 12rpx;
+  font-size: 23rpx;
+  font-weight: 600;
+}
+
+.poster-button {
+  border: 1rpx solid var(--color-line);
+  background: #FFFFFF;
+  color: var(--color-text);
+}
+
+.checkin-button {
+  background: var(--color-primary);
+  color: #FFFFFF;
+}
+
+.checkin-button-done {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.selected-plans {
+  margin-top: 24rpx;
+  padding-top: 22rpx;
+  border-top: 1rpx solid var(--color-line);
+}
+
+.selected-plans-title {
+  color: var(--color-muted);
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.selected-plan-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 88rpx;
+  color: var(--color-text);
+  font-size: 23rpx;
+}
+
+.selected-plan-row > view {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  color: var(--color-muted);
+  font-size: 22rpx;
+}
+
+.selected-plan-arrow {
+  color: var(--color-subtle);
+  font-size: 28rpx;
+}

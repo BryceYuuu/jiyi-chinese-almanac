@@ -1,0 +1,34 @@
+<view class="term-overlay" wx:if="{{visible && term}}" catchtap="close">
+  <view class="term-sheet" catchtap="stopPropagation">
+    <view class="term-handle"></view>
+    <view class="term-header">
+      <view class="term-heading">
+        <text class="term-category">{{term.category}}</text>
+        <text class="term-title">{{term.title}}</text>
+      </view>
+      <view class="term-close-anchor">
+        <button class="term-close" aria-label="关闭术语解释" bindtap="close">×</button>
+      </view>
+    </view>
+
+    <view class="term-current" wx:if="{{term.currentValue}}">
+      <text>当前页面</text>
+      <text>{{term.currentValue}}</text>
+    </view>
+
+    <text class="term-summary">{{term.summary}}</text>
+
+    <view class="term-section">
+      <text class="term-section-label">怎么看</text>
+      <text class="term-section-copy">{{term.reading}}</text>
+    </view>
+    <view class="term-section">
+      <text class="term-section-label">怎么使用</text>
+      <text class="term-section-copy">{{term.use}}</text>
+    </view>
+    <view class="term-caution">
+      <view class="term-caution-mark"></view>
+      <text>{{term.caution}}</text>
+    </view>
+  </view>
+</view>

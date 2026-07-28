@@ -1,0 +1,557 @@
+.profile-page {
+  padding-top: 20rpx;
+}
+
+.profile-page.theme-gold .card {
+  border-color: rgba(155, 109, 34, 0.2);
+  background: linear-gradient(145deg, #FFF9ED 0%, #FCF3DF 54%, #F7E9CA 100%);
+}
+
+.profile-card:active,
+.plan-entry:active,
+.overview-item:active,
+.section-more:active {
+  opacity: 0.72;
+}
+
+.profile-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-header .page-title {
+  font-size: 46rpx;
+  line-height: 1.2;
+}
+
+.profile-header .page-subtitle {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-top: 28rpx;
+  padding: 28rpx;
+}
+
+.birth-chart-card {
+  margin-top: 18rpx;
+  padding: 24rpx 26rpx 20rpx;
+  background: linear-gradient(145deg, var(--color-surface-strong), var(--color-primary-soft));
+}
+
+.birth-chart-card:active {
+  opacity: 0.78;
+}
+
+.birth-chart-head,
+.birth-chart-title-row,
+.birth-chart-foot,
+.birth-chart-empty,
+.birth-chart-action {
+  display: flex;
+  align-items: center;
+}
+
+.birth-chart-head,
+.birth-chart-foot,
+.birth-chart-empty {
+  justify-content: space-between;
+}
+
+.birth-chart-title-row {
+  min-width: 0;
+  gap: 14rpx;
+}
+
+.birth-chart-seal {
+  display: flex;
+  width: 48rpx;
+  height: 48rpx;
+  flex: 0 0 48rpx;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid var(--color-primary-border-strong);
+  border-radius: 8rpx;
+  color: var(--color-primary);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 23rpx;
+}
+
+.birth-chart-heading {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.birth-chart-title {
+  color: var(--color-text);
+  font-size: 27rpx;
+  font-weight: 600;
+}
+
+.birth-chart-meta {
+  margin-top: 4rpx;
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 20rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.birth-chart-status {
+  flex: 0 0 auto;
+  padding: 7rpx 13rpx;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--color-primary);
+  font-size: 19rpx;
+  font-weight: 600;
+}
+
+.birth-chart-pillars {
+  display: grid;
+  margin-top: 22rpx;
+  padding: 18rpx 0;
+  border-top: 1rpx solid var(--color-primary-border);
+  border-bottom: 1rpx solid var(--color-primary-border);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.birth-chart-pillar {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1rpx solid var(--color-primary-border);
+}
+
+.birth-chart-pillar:last-child {
+  border-right: 0;
+}
+
+.birth-chart-pillar-label {
+  color: var(--color-subtle);
+  font-size: 18rpx;
+}
+
+.birth-chart-pillar-value {
+  margin-top: 6rpx;
+  color: var(--color-text);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 29rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
+
+.birth-chart-pillar-element {
+  margin-top: 3rpx;
+  color: var(--color-muted);
+  font-size: 18rpx;
+}
+
+.birth-chart-foot {
+  min-height: 52rpx;
+  color: var(--color-muted);
+  font-size: 20rpx;
+}
+
+.birth-chart-empty {
+  gap: 20rpx;
+  margin-top: 18rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid var(--color-primary-border);
+  color: var(--color-muted);
+  font-size: 21rpx;
+  line-height: 1.5;
+}
+
+.birth-chart-empty > text {
+  flex: 1;
+}
+
+.birth-chart-action {
+  flex: 0 0 auto;
+  color: var(--color-primary);
+  font-size: 21rpx;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.birth-chart-action .profile-arrow,
+.birth-chart-foot .profile-arrow {
+  font-size: 30rpx;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88rpx;
+  height: 88rpx;
+  flex: 0 0 88rpx;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 34rpx;
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+}
+
+.profile-meta {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.profile-name {
+  color: var(--color-text);
+  font-size: 31rpx;
+  font-weight: 600;
+}
+
+.profile-desc {
+  margin-top: 8rpx;
+  color: var(--color-muted);
+  font-size: 23rpx;
+  white-space: nowrap;
+}
+
+.profile-action {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex: 0 0 auto;
+}
+
+.profile-action-text {
+  color: var(--color-primary);
+  font-size: 23rpx;
+  font-weight: 600;
+}
+
+.overview-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28rpx;
+  padding: 18rpx 0 22rpx;
+  border-bottom: 1rpx solid var(--color-line);
+}
+
+.overview-item {
+  display: flex;
+  min-width: 170rpx;
+  min-height: 88rpx;
+  flex-direction: column;
+  align-items: center;
+}
+
+.overview-value {
+  color: var(--color-text);
+  font-family: "Bodoni 72", "Didot", "Georgia", serif;
+  font-size: 40rpx;
+  line-height: 1;
+}
+
+.overview-label {
+  margin-top: 7rpx;
+  color: var(--color-muted);
+  font-size: 22rpx;
+}
+
+.overview-divider {
+  width: 1rpx;
+  height: 46rpx;
+  background: var(--color-line);
+}
+
+.plans-section {
+  margin-top: 28rpx;
+}
+
+.section-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-heading-row .section-title {
+  margin-bottom: 14rpx;
+}
+
+.section-more {
+  display: flex;
+  min-height: 88rpx;
+  align-items: center;
+  margin-bottom: 14rpx;
+  color: var(--color-primary);
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.plan-entry {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  padding: 28rpx;
+}
+
+.plan-entry-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62rpx;
+  height: 62rpx;
+  flex: 0 0 62rpx;
+  border: 1rpx solid var(--color-primary-border);
+  border-radius: 9rpx;
+  color: var(--color-primary);
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 25rpx;
+}
+
+.plan-entry-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.plan-entry-title {
+  overflow: hidden;
+  color: var(--color-text);
+  font-size: 26rpx;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plan-entry-meta {
+  margin-top: 7rpx;
+  color: var(--color-muted);
+  font-size: 22rpx;
+}
+
+.plan-entry-side {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  color: var(--color-primary);
+  font-size: 22rpx;
+}
+
+.profile-arrow {
+  color: var(--color-subtle);
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+.settings-section {
+  margin-top: 28rpx;
+}
+
+.section-title {
+  display: block;
+  margin-bottom: 14rpx;
+  color: var(--color-muted);
+  font-size: 23rpx;
+  font-weight: 600;
+}
+
+.settings-card {
+  padding: 0 28rpx;
+}
+
+.setting-block {
+  padding: 26rpx 0;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding: 26rpx 0;
+}
+
+.setting-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.setting-name {
+  color: var(--color-text);
+  font-size: 27rpx;
+  font-weight: 600;
+}
+
+.setting-desc {
+  margin-top: 7rpx;
+  color: var(--color-muted);
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+
+.mode-choices {
+  display: flex;
+  width: 190rpx;
+  height: 68rpx;
+  flex: 0 0 190rpx;
+  padding: 3rpx;
+  border: 1rpx solid var(--color-line);
+  border-radius: var(--radius-pill);
+  background: var(--color-control-bg);
+}
+
+.mode-choice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  min-width: 0;
+  max-width: 50%;
+  height: 60rpx;
+  flex: 1;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-muted);
+  overflow: hidden;
+  font-size: 21rpx;
+  line-height: 1;
+}
+
+.mode-choice-active {
+  background: var(--color-surface-strong);
+  color: var(--color-primary);
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
+}
+
+.setting-mode-row {
+  align-items: center;
+}
+
+.setting-mode-row .setting-copy {
+  min-width: 0;
+}
+
+.theme-setting {
+  padding-bottom: 28rpx;
+}
+
+.theme-options {
+  display: grid;
+  margin-top: 20rpx;
+  gap: 12rpx;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.theme-option {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 88rpx;
+  align-items: center;
+  gap: 10rpx;
+  padding: 12rpx 16rpx;
+  border: 1rpx solid var(--color-line);
+  border-radius: 12rpx;
+  background: rgba(255, 255, 255, 0.34);
+  text-align: left;
+}
+
+.theme-option-active {
+  border-color: var(--color-primary-border-strong);
+  background: var(--color-primary-soft);
+  box-shadow: 0 4rpx 12rpx var(--color-primary-wash);
+}
+
+.theme-swatch {
+  display: flex;
+  width: 34rpx;
+  height: 34rpx;
+  flex: 0 0 34rpx;
+  align-items: center;
+  justify-content: center;
+  border: 3rpx solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1rpx rgba(34, 34, 34, 0.08);
+}
+
+.theme-check {
+  color: #FFFFFF;
+  font-size: 20rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.theme-option-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.theme-option-name {
+  color: var(--color-text);
+  font-size: 22rpx;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.theme-option-desc {
+  margin-top: 3rpx;
+  color: var(--color-muted);
+  font-size: 18rpx;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.setting-divider {
+  height: 1rpx;
+  background: var(--color-line);
+}
+
+.privacy-note {
+  margin-top: 28rpx;
+  padding: 24rpx 4rpx;
+  border-top: 1rpx solid var(--color-line);
+}
+
+.privacy-title {
+  display: block;
+  color: var(--color-text);
+  font-size: 25rpx;
+  font-weight: 600;
+}
+
+.privacy-desc {
+  display: block;
+  margin-top: 8rpx;
+  color: var(--color-muted);
+  font-size: 22rpx;
+  line-height: 1.55;
+}
+
+.version {
+  display: block;
+  margin-top: 42rpx;
+  color: var(--color-subtle);
+  font-size: 22rpx;
+  text-align: center;
+}

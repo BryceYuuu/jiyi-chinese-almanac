@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "日历",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "term-sheet": "/components/term-sheet/index"
+  }
+}

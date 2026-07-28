@@ -1,0 +1,336 @@
+<view class="page-shell home-page {{themeClass}} {{termHelpEnabled ? 'term-help-enabled' : ''}}">
+  <image class="page-texture page-texture-top" src="{{themeTextureTop}}" mode="scaleToFill"></image>
+  <image class="page-texture page-texture-body" src="{{themeTextureBody}}" mode="scaleToFill"></image>
+  <image class="page-texture page-texture-tail" src="{{themeTextureBody}}" mode="scaleToFill"></image>
+
+  <view class="home-header">
+    <view class="greeting-block" bindtap="openProfile">
+      <text class="greeting">{{greeting}}</text>
+      <text class="display-name">{{displayName}}</text>
+      <text class="profile-line">{{profileLine}}</text>
+    </view>
+    <view class="mode-switch">
+      <button class="{{friendlyModeClass}}" data-mode="friendly" bindtap="switchMode">友好</button>
+      <button class="{{professionalModeClass}}" data-mode="professional" bindtap="switchMode">专业</button>
+    </view>
+  </view>
+
+  <view class="date-section" wx:if="{{today}}">
+    <view class="date-main">
+      <text class="day-number">{{today.day}}</text>
+      <view class="date-meta">
+        <text class="weekday">{{today.weekday}}</text>
+        <text class="month-day">{{today.monthDay}}</text>
+        <text class="lunar-line">{{today.lunarDateLine}}</text>
+      </view>
+    </view>
+    <view class="date-status">
+      <view class="checkin-anchor">
+        <button class="{{checkinClass}}" bindtap="handleCheckin">
+          <text class="checkin-seal">印</text>
+          <text>{{checkinText}}</text>
+        </button>
+      </view>
+      <view class="date-rating {{today.ratingClass}}">
+        <view class="rating-seal">
+          <text class="rating-grade">{{today.grade}}</text>
+        </view>
+        <view class="rating-copy">
+          <text class="rating-rhythm">{{today.rhythm}}</text>
+          <text class="rating-label">今日节奏</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <block wx:if="{{showFriendly}}">
+    <view class="advice-panel card">
+      <view class="panel-heading">
+        <text class="panel-title">今日建议</text>
+      </view>
+
+      <view class="advice-row">
+        <text class="advice-label advice-label-good">适合</text>
+        <view class="tag-row">
+          <text class="tag tag-good" wx:for="{{today.suitable}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+
+      <view class="row-divider"></view>
+
+      <view class="advice-row">
+        <text class="advice-label">注意</text>
+        <view class="tag-row">
+          <text class="tag tag-neutral" wx:for="{{today.avoid}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+
+      <view class="reminder-row">
+        <view class="reminder-mark"></view>
+        <text>{{today.reminder}}</text>
+      </view>
+    </view>
+
+  </block>
+
+  <view class="bazi-daily-card card {{showProfessional ? 'bazi-daily-card-pro' : ''}}" wx:if="{{today}}">
+    <view class="bazi-daily-head">
+      <view class="bazi-daily-heading">
+        <view class="bazi-daily-seal">命</view>
+        <view>
+          <text class="bazi-daily-title">今日个人参考</text>
+          <text class="bazi-daily-subtitle">{{today.baziInsight ? '结合出生资料与当日干支' : '你的个人历法资料'}}</text>
+        </view>
+      </view>
+      <text class="bazi-daily-badge">{{today.baziInsight ? today.baziInsight.dailyPillar : '待开启'}}</text>
+    </view>
+
+    <block wx:if="{{today.baziInsight}}">
+      <block wx:if="{{showFriendly}}">
+        <view class="bazi-friendly-hero">
+          <view class="bazi-ten-god">
+            <view class="bazi-theme-keywords">
+              <text wx:for="{{baziThemeKeywords}}" wx:key="*this">{{item}}</text>
+            </view>
+          </view>
+          <text class="bazi-friendly-summary">{{today.baziInsight.friendlySummary}}</text>
+        </view>
+
+        <view class="bazi-friendly-signal {{today.baziInsight.triggerToneClass}}">
+          <text class="bazi-signal-label">日期关联</text>
+          <text class="bazi-signal-value">{{today.baziInsight.triggerText}}</text>
+        </view>
+
+      </block>
+
+      <block wx:if="{{showProfessional}}">
+        <view class="bazi-pro-grid">
+          <view class="bazi-pro-fact pro-term-trigger" data-term="日主" data-value="{{today.baziInsight.dayMaster}} · {{today.baziInsight.dayMasterDetail}}" bindtap="openTerm">
+            <view class="bazi-label-with-mark"><text class="bazi-field-label">本命日主</text><text class="pro-term-mark">?</text></view>
+            <text class="bazi-pro-value">{{today.baziInsight.dayMaster}}</text>
+            <text class="bazi-pro-detail">{{today.baziInsight.dayMasterDetail}}</text>
+          </view>
+          <view class="bazi-pro-fact pro-term-trigger" data-term="流日干支" data-value="{{today.baziInsight.dailyPillar}} · 天干{{today.baziInsight.currentStemElement}} · 地支{{today.baziInsight.currentBranchElement}}" bindtap="openTerm">
+            <view class="bazi-label-with-mark"><text class="bazi-field-label">今日流日</text><text class="pro-term-mark">?</text></view>
+            <text class="bazi-pro-value">{{today.baziInsight.dailyPillar}}</text>
+            <text class="bazi-pro-detail">天干{{today.baziInsight.currentStemElement}} · 地支{{today.baziInsight.currentBranchElement}}</text>
+          </view>
+          <view class="bazi-pro-fact pro-term-trigger" data-term="十神" data-value="{{today.baziInsight.primaryTenGod}}" bindtap="openTerm">
+            <view class="bazi-label-with-mark"><text class="bazi-field-label">透干十神</text><text class="pro-term-mark">?</text></view>
+            <text class="bazi-pro-value">{{today.baziInsight.primaryTenGod}}</text>
+            <text class="bazi-pro-detail">{{today.baziInsight.primaryTenGodTheme}}</text>
+          </view>
+          <view class="bazi-pro-fact pro-term-trigger" data-term="十神" data-value="{{today.baziInsight.hiddenTenGodText}}" bindtap="openTerm">
+            <view class="bazi-label-with-mark"><text class="bazi-field-label">日支藏干</text><text class="pro-term-mark">?</text></view>
+            <text class="bazi-pro-value bazi-pro-value-small">{{today.baziInsight.hiddenTenGods[0].tenGod}}</text>
+            <text class="bazi-pro-detail">{{today.baziInsight.hiddenTenGodText}}</text>
+          </view>
+        </view>
+
+        <view class="bazi-pro-section">
+          <view class="bazi-pro-section-head pro-term-trigger" data-term="四柱作用" data-value="{{today.baziInsight.triggerText}}" bindtap="openTerm">
+            <view class="bazi-label-with-mark"><text>四柱作用</text><text class="pro-term-mark">?</text></view>
+            <text>{{today.baziInsight.hasTrigger ? '关联' + today.baziInsight.interactions.length + '项' : '关系平稳'}}</text>
+          </view>
+          <view class="bazi-interaction-row" wx:for="{{today.baziInsight.interactions}}" wx:key="key">
+            <text class="bazi-interaction-badge bazi-interaction-{{item.tone}}">{{item.label}}</text>
+            <text>{{item.detail}}</text>
+          </view>
+          <text class="bazi-no-interaction" wx:if="{{!today.baziInsight.hasTrigger}}">{{today.baziInsight.triggerText}}</text>
+        </view>
+
+        <view class="bazi-pro-line pro-term-trigger" data-term="五行流转" data-value="{{today.baziInsight.flowText}}" bindtap="openTerm">
+          <view class="bazi-label-with-mark"><text>五行流转</text><text class="pro-term-mark">?</text></view>
+          <text>{{today.baziInsight.flowText}}</text>
+        </view>
+
+        <view class="bazi-pro-line bazi-pro-stars pro-term-trigger" wx:if="{{today.baziInsight.hasStars}}" data-term="个人神煞" data-value="{{today.baziInsight.starText}}" bindtap="openTerm">
+          <view class="bazi-label-with-mark"><text>个人神煞</text><text class="pro-term-mark">?</text></view>
+          <view class="bazi-star-list">
+            <text class="bazi-star" wx:for="{{today.baziInsight.personalStars}}" wx:key="name">{{item.name}}</text>
+          </view>
+        </view>
+      </block>
+    </block>
+
+    <view class="bazi-empty" wx:else>
+      <view class="bazi-empty-copy">
+        <text class="bazi-empty-title">完善出生时间，查看个人历法参考</text>
+        <text class="bazi-empty-desc">补充出生资料后，可查看当日干支、十神与四柱关系等专业信息。</text>
+      </view>
+      <button class="bazi-empty-action" bindtap="openBirthProfile">去完善 <text>›</text></button>
+    </view>
+  </view>
+
+  <block wx:if="{{showProfessional}}">
+    <view class="pro-dashboard card">
+      <view class="pro-header">
+        <view class="pro-heading-copy">
+          <text class="pro-eyebrow">专业日课</text>
+          <text class="pro-title">今日黄历全览</text>
+          <text class="pro-ganzhi">{{today.professional.ganZhiLine}}</text>
+        </view>
+        <view class="{{today.professional.tianShenClass}} pro-term-trigger" data-term="值神" data-value="{{today.professional.tianShen}}" bindtap="openTerm">
+          <text>{{today.professional.tianShenLuck}}</text>
+          <text>{{today.professional.tianShenName}}</text>
+        </view>
+      </view>
+
+      <view class="pro-almanac">
+        <view class="pro-almanac-row">
+          <text class="pro-almanac-label">宜</text>
+          <view class="pro-tag-list">
+            <text class="pro-tag" wx:for="{{today.professional.yi}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+        <view class="pro-almanac-row">
+          <text class="pro-almanac-label pro-almanac-label-avoid">忌</text>
+          <view class="pro-tag-list">
+            <text class="pro-tag pro-tag-avoid" wx:for="{{today.professional.ji}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading">
+          <text class="pro-section-title">日课核心</text>
+          <text class="pro-section-meta">{{today.professional.zhiXing}} · {{today.professional.xiu}}</text>
+        </view>
+        <view class="pro-core-grid">
+          <view class="pro-core-item pro-term-trigger" wx:for="{{today.professional.coreFacts}}" wx:key="label" data-term="{{item.label}}" data-value="{{item.value}} · {{item.detail}}" bindtap="openTerm">
+            <view class="pro-fact-label-row"><text class="pro-fact-label">{{item.label}}</text><text class="pro-term-mark">?</text></view>
+            <text class="pro-fact-value">{{item.value}}</text>
+            <text class="pro-fact-detail">{{item.detail}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading">
+          <text class="pro-section-title">神煞参断</text>
+          <text class="pro-section-meta">择日辅助</text>
+        </view>
+        <view class="pro-shen-group">
+          <view class="pro-shen-label-row pro-term-trigger" data-term="吉神" data-value="{{today.professional.jiShen}}" bindtap="openTerm"><text class="pro-shen-label">吉神宜趋</text><text class="pro-term-mark">?</text></view>
+          <view class="pro-shen-tags">
+            <text class="pro-shen-tag pro-shen-tag-good" wx:for="{{today.professional.jiShen}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+        <view class="pro-shen-group">
+          <view class="pro-shen-label-row pro-term-trigger" data-term="凶煞" data-value="{{today.professional.xiongSha}}" bindtap="openTerm"><text class="pro-shen-label">凶煞宜忌</text><text class="pro-term-mark">?</text></view>
+          <view class="pro-shen-tags">
+            <text class="pro-shen-tag" wx:for="{{today.professional.xiongSha}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading">
+          <text class="pro-section-title">冲煞与方位</text>
+          <text class="pro-section-meta">日生肖 {{today.professional.dayShengXiao}}</text>
+        </view>
+        <view class="pro-personal-relation pro-term-trigger {{today.personalRelation.className}}" wx:if="{{today.personalRelation}}" data-term="四柱关系" data-value="{{today.personalRelation.shortText}}" bindtap="openTerm">
+          <view class="pro-personal-copy">
+            <text class="pro-personal-label">与你的出生资料</text>
+            <text class="pro-personal-value">{{today.personalRelation.shortText}}</text>
+          </view>
+          <text class="pro-personal-badge">{{today.personalRelation.label}}</text>
+        </view>
+        <view class="pro-chong-row pro-term-trigger" data-term="冲煞" data-value="{{today.professional.chongSha}}" bindtap="openTerm">
+          <view class="pro-row-label"><text>日冲煞</text><text class="pro-term-mark">?</text></view>
+          <text>{{today.professional.chongSha}}</text>
+        </view>
+        <view class="pro-position-grid">
+          <view class="pro-position-item" wx:for="{{today.professional.positionFacts}}" wx:key="label">
+            <text class="pro-position-label">{{item.label}}</text>
+            <text class="pro-position-value">{{item.value}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading">
+          <text class="pro-section-title">历法细目</text>
+          <text class="pro-section-meta">{{today.professional.wuHou}}</text>
+        </view>
+        <view class="pro-observation-list">
+          <view class="pro-observation-row pro-term-trigger" wx:for="{{today.professional.observationFacts}}" wx:key="label" data-term="{{item.label}}" data-value="{{item.value}}" bindtap="openTerm">
+            <view class="pro-row-label"><text class="pro-observation-label">{{item.label}}</text><text class="pro-term-mark">?</text></view>
+            <text class="pro-observation-value">{{item.value}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="pro-block">
+        <view class="pro-section-heading pro-term-trigger" data-term="时辰吉凶" data-value="当日共{{today.professional.timeDetails.length}}个时段" bindtap="openTerm">
+          <view class="pro-section-title-row"><text class="pro-section-title">时辰吉凶</text><text class="pro-term-mark">?</text></view>
+          <text class="pro-section-meta">十三时段 · 含早晚子时</text>
+        </view>
+        <scroll-view class="pro-time-scroll" scroll-x="true" enhanced="true" show-scrollbar="{{false}}">
+          <view class="pro-time-list">
+            <view class="pro-time-item" wx:for="{{today.professional.timeDetails}}" wx:key="key">
+              <view class="pro-time-head">
+                <text class="pro-time-zhi">{{item.zhi}}</text>
+                <text class="{{item.luckClass}}">{{item.luck}}</text>
+              </view>
+              <text class="pro-time-range">{{item.range}}</text>
+              <text class="pro-time-meta">{{item.ganZhi}} · {{item.tianShen}}</text>
+              <text class="pro-time-chong">{{item.chongSha}}</text>
+              <view class="pro-time-line"><text>宜</text><text>{{item.yiText}}</text></view>
+              <view class="pro-time-line pro-time-line-avoid"><text>忌</text><text>{{item.jiText}}</text></view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+
+  </block>
+
+  <view class="personal-tip" wx:if="{{today.personalTip && !today.baziInsight}}">
+    <text class="tip-label">你的提醒</text>
+    <text class="tip-copy">{{today.personalTip}}</text>
+  </view>
+
+  <view class="inspiration-card" wx:if="{{inspiration}}">
+    <image class="inspiration-image" src="{{inspirationImage}}" mode="aspectFill" />
+    <view class="inspiration-copy">
+      <text class="inspiration-label">今日灵感</text>
+      <text class="inspiration-title">{{inspiration.keyword}}</text>
+      <text class="inspiration-desc">{{inspiration.text}}</text>
+    </view>
+    <view class="inspiration-footer">
+      <text class="inspiration-action">{{inspiration.action}}</text>
+    </view>
+    <view class="inspiration-poster-anchor">
+      <button class="inspiration-poster {{isOpeningPoster ? 'inspiration-poster-loading' : ''}}" disabled="{{isOpeningPoster}}" bindtap="openPoster">
+        <text>{{posterButtonText}}</text>
+        <text class="inspiration-poster-arrow">›</text>
+      </button>
+    </view>
+  </view>
+
+  <view class="next-section">
+    <view class="forecast-heading">
+      <text class="next-title">未来3天</text>
+    </view>
+
+    <view class="forecast-panel">
+      <view class="forecast-item" wx:for="{{upcomingDays}}" wx:key="dateKey" data-date="{{item.dateKey}}" bindtap="openUpcomingDate">
+        <text class="forecast-weekday">{{item.weekday}}</text>
+        <text class="forecast-day">{{item.day}}</text>
+        <text class="forecast-lunar">{{item.lunar}}</text>
+        <view class="forecast-rhythm">
+          <view class="{{item.markerClass}}"></view>
+          <text>{{item.grade}} · {{item.rhythm}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="forecast-footer">
+      <view class="forecast-calendar-anchor">
+        <button bindtap="openCalendar">打开日历 <text>›</text></button>
+      </view>
+    </view>
+  </view>
+  <term-sheet visible="{{showTermSheet}}" term="{{activeTerm}}" bindclose="closeTerm" />
+</view>

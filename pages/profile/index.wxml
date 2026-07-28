@@ -1,0 +1,155 @@
+<view class="page-shell profile-page {{themeClass}}">
+  <image class="page-texture page-texture-top" src="{{themeTextureTop}}" mode="scaleToFill"></image>
+  <image class="page-texture page-texture-body" src="{{themeTextureBody}}" mode="scaleToFill"></image>
+  <image class="page-texture page-texture-tail" src="{{themeTextureBody}}" mode="scaleToFill"></image>
+
+  <view class="profile-header">
+    <text class="page-title">我的</text>
+    <text class="page-subtitle">你的资料只保存在当前设备。</text>
+  </view>
+
+  <view class="profile-card card" bindtap="editProfile">
+    <view class="avatar">
+      <image class="avatar-image" wx:if="{{hasAvatar}}" src="{{avatarPath}}" mode="aspectFill" binderror="onAvatarError" />
+      <text wx:else>{{avatarText}}</text>
+    </view>
+    <view class="profile-meta">
+      <text class="profile-name">{{displayName}}</text>
+      <text class="profile-desc">{{profileDesc}}</text>
+    </view>
+    <view class="profile-action">
+      <text class="profile-action-text">编辑</text>
+      <text class="profile-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="birth-chart-card card" bindtap="editBirthChart">
+    <view class="birth-chart-head">
+      <view class="birth-chart-title-row">
+        <view class="birth-chart-seal">命</view>
+        <view class="birth-chart-heading">
+          <text class="birth-chart-title">出生历法资料</text>
+          <text class="birth-chart-meta" wx:if="{{hasBirthChart}}">{{birthChartMeta}}</text>
+        </view>
+      </view>
+      <text class="birth-chart-status">{{birthChartStatus}}</text>
+    </view>
+
+    <block wx:if="{{hasBirthChart}}">
+      <view class="birth-chart-pillars">
+        <view class="birth-chart-pillar" wx:for="{{birthChartPillars}}" wx:key="key">
+          <text class="birth-chart-pillar-label">{{item.label}}</text>
+          <text class="birth-chart-pillar-value">{{item.value}}</text>
+          <text class="birth-chart-pillar-element">{{item.wuXing}}</text>
+        </view>
+      </view>
+      <view class="birth-chart-foot">
+        <text>{{birthChartElements}}</text>
+        <text class="profile-arrow">›</text>
+      </view>
+    </block>
+
+    <view class="birth-chart-empty" wx:else>
+      <text>{{birthChartPrompt}}</text>
+      <view class="birth-chart-action">去完善 <text class="profile-arrow">›</text></view>
+    </view>
+  </view>
+
+  <view class="settings-section">
+    <text class="section-title">偏好设置</text>
+    <view class="settings-card card">
+      <view class="setting-row setting-mode-row">
+        <view class="setting-copy">
+          <text class="setting-name">默认首页模式</text>
+          <text class="setting-desc">友好版更简洁，专业版显示完整黄历</text>
+        </view>
+        <view class="mode-choices">
+          <button class="{{friendlyClass}}" data-mode="friendly" bindtap="switchMode">友好</button>
+          <button class="{{professionalClass}}" data-mode="professional" bindtap="switchMode">专业</button>
+        </view>
+      </view>
+
+      <view class="setting-divider"></view>
+
+      <view class="setting-block theme-setting">
+        <view class="setting-copy">
+          <text class="setting-name">主题色调</text>
+          <text class="setting-desc">同步调整页面、按钮与底部导航</text>
+        </view>
+        <view class="theme-options">
+          <button class="{{item.className}}" wx:for="{{themeOptions}}" wx:key="key" data-theme="{{item.key}}" bindtap="selectTheme">
+            <view class="theme-swatch" style="background-color: {{item.primary}}">
+              <text class="theme-check" wx:if="{{item.selected}}">✓</text>
+            </view>
+            <view class="theme-option-copy">
+              <text class="theme-option-name">{{item.name}}</text>
+              <text class="theme-option-desc">{{item.description}}</text>
+            </view>
+          </button>
+        </view>
+      </view>
+
+      <view class="setting-divider"></view>
+
+      <view class="setting-row">
+        <view class="setting-copy">
+          <text class="setting-name">个性化日期筛选</text>
+          <text class="setting-desc">用于调整候选日期，不影响通用日历</text>
+        </view>
+        <switch checked="{{hasZodiac && avoidOwnChong}}" disabled="{{!hasZodiac}}" color="{{themeColor}}" bindchange="onAvoidChange" />
+      </view>
+
+      <view class="setting-divider"></view>
+
+      <view class="setting-row">
+        <view class="setting-copy">
+          <text class="setting-name">专业名词解释</text>
+          <text class="setting-desc">开启后显示问号，点击可查看对应释义</text>
+        </view>
+        <switch checked="{{termHelpEnabled}}" color="{{themeColor}}" bindchange="onTermHelpChange" />
+      </view>
+    </view>
+  </view>
+
+  <view class="plans-section">
+    <view class="section-heading-row">
+      <text class="section-title">我的计划</text>
+      <text class="section-more" bindtap="openPlans">查看全部</text>
+    </view>
+    <view class="plan-entry card" bindtap="openPlans">
+      <view class="plan-entry-mark">计</view>
+      <view class="plan-entry-copy">
+        <text class="plan-entry-title">{{nextPlanTitle}}</text>
+        <text class="plan-entry-meta">{{nextPlanMeta}}</text>
+      </view>
+      <view class="plan-entry-side">
+        <text wx:if="{{hasNextPlan}}">{{pendingPlanCount}}项</text>
+        <text class="profile-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="overview-row">
+    <view class="overview-item" bindtap="openCalendar">
+      <text class="overview-value">{{checkinStreak}}</text>
+      <text class="overview-label">连续留印</text>
+    </view>
+    <view class="overview-divider"></view>
+    <view class="overview-item" bindtap="openCalendar">
+      <text class="overview-value">{{checkinMonthCount}}</text>
+      <text class="overview-label">本月留印</text>
+    </view>
+    <view class="overview-divider"></view>
+    <view class="overview-item" bindtap="openPlans">
+      <text class="overview-value">{{pendingPlanCount}}</text>
+      <text class="overview-label">待进行</text>
+    </view>
+  </view>
+
+  <view class="privacy-note">
+    <text class="privacy-title">本地隐私</text>
+    <text class="privacy-desc">生日、出生时间、生肖、留印和计划均使用微信本地缓存保存，不会上传至服务器。</text>
+  </view>
+
+  <text class="version">吉易 V0.2</text>
+</view>
