@@ -28,7 +28,7 @@
       <view class="birth-chart-title-row">
         <view class="birth-chart-seal">命</view>
         <view class="birth-chart-heading">
-          <text class="birth-chart-title">出生历法资料</text>
+          <text class="birth-chart-title">{{copy.birthInfoTitle}}</text>
           <text class="birth-chart-meta" wx:if="{{hasBirthChart}}">{{birthChartMeta}}</text>
         </view>
       </view>
@@ -61,7 +61,7 @@
       <view class="setting-row setting-mode-row">
         <view class="setting-copy">
           <text class="setting-name">默认首页模式</text>
-          <text class="setting-desc">友好版更简洁，专业版显示完整黄历</text>
+          <text class="setting-desc">{{copy.modeDescription}}</text>
         </view>
         <view class="mode-choices">
           <button class="{{friendlyClass}}" data-mode="friendly" bindtap="switchMode">友好</button>
@@ -107,6 +107,16 @@
           <text class="setting-desc">开启后显示问号，点击可查看对应释义</text>
         </view>
         <switch checked="{{termHelpEnabled}}" color="{{themeColor}}" bindchange="onTermHelpChange" />
+      </view>
+
+      <view class="setting-divider"></view>
+
+      <view class="setting-row">
+        <view class="setting-copy">
+          <text class="setting-name">{{copy.classicSettingName}}</text>
+          <text class="setting-desc">{{copy.classicSettingDescription}}</text>
+        </view>
+        <switch checked="{{classicCopyEnabled}}" color="{{themeColor}}" bindchange="onClassicCopyChange" />
       </view>
     </view>
   </view>

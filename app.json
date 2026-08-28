@@ -36,7 +36,7 @@
       },
       {
         "pagePath": "pages/goodday/index",
-        "text": "好日子",
+        "text": "元气日",
         "iconPath": "assets/tabbar-png/tab-goodday.png",
         "selectedIconPath": "assets/tabbar-png/tab-goodday-active.png"
       },

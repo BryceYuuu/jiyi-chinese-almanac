@@ -1,8 +1,8 @@
 {
   "name": "jiyi",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
-  "description": "吉易 V0 纯前端微信小程序",
+  "description": "纯前端黄历、八字与择日微信小程序",
   "scripts": {
     "miniprogram:build-npm": "echo \"请在微信开发者工具中执行 工具 > 构建 npm\""
   },

@@ -208,7 +208,7 @@ function drawHeader(ctx, width, palette, content) {
   ctx.fillStyle = palette.ink;
   ctx.font = "500 11px sans-serif";
   ctx.textAlign = "right";
-  ctx.fillText(content.eyebrow || "今日吉易", width - 28, 41);
+  ctx.fillText(content.eyebrow || "今日状态播报", width - 28, 41);
   ctx.strokeStyle = palette.secondary;
   ctx.beginPath();
   ctx.moveTo(width - 73, 51);

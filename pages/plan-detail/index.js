@@ -1,11 +1,14 @@
 const { getAppSnapshot } = require("../../utils/app-state");
 const { parseDate } = require("../../utils/date");
 const { getPlan, getPlanDisplayLevel, getPlanLifecycle, removePlan, updatePlan } = require("../../utils/plans");
+const { getVocabulary, translateCopyText } = require("../../utils/vocabulary");
 
 Page({
   data: {
     themeClass: "theme-cinnabar",
     themeColor: "#C94732",
+    copy: getVocabulary({}),
+    classicCopyEnabled: false,
     planId: "",
     plan: null,
     title: "",
@@ -42,6 +45,12 @@ Page({
     const lifecycle = getPlanLifecycle(plan, new Date());
     const snapshot = getAppSnapshot(new Date());
     const mode = snapshot.mode;
+    const displayPlan = Object.assign({}, plan, {
+      reason: translateCopyText(plan.reason, snapshot.classicCopyEnabled),
+      action: translateCopyText(plan.action, snapshot.classicCopyEnabled),
+      risk: translateCopyText(plan.risk, snapshot.classicCopyEnabled),
+      basisExplanation: translateCopyText(plan.basisExplanation, snapshot.classicCopyEnabled)
+    });
     const lifecycleHints = {
       today: "计划日期就是今天，完成后记得回来确认。",
       review: "计划日期已经过去，请确认是否完成，或结束这项计划。",
@@ -50,8 +59,10 @@ Page({
     this.setData({
       themeClass: snapshot.themeClass,
       themeColor: snapshot.themeColor,
+      copy: snapshot.copy,
+      classicCopyEnabled: snapshot.classicCopyEnabled,
       planId: plan.id,
-      plan,
+      plan: displayPlan,
       title: plan.title,
       note: plan.note,
       day: date ? date.getDate() : "--",

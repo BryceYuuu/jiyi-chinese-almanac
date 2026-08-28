@@ -1,5 +1,5 @@
 {
-  "description": "吉易 V0 纯前端微信小程序",
+  "description": "吉易：纯前端黄历、八字与择日微信小程序",
   "packOptions": {
     "ignore": [
       {

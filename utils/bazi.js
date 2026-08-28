@@ -323,22 +323,22 @@ function getBranchInteraction(current, natal) {
     if (isBranchPunishment(current, natal)) {
       return { key: "punishment", label: "自刑", tone: "caution", priority: 88 };
     }
-    return { key: "same", label: "同气", tone: "neutral", priority: 40 };
+    return { key: "same", label: "同频", tone: "neutral", priority: 40 };
   }
   if (matchesRelation(current, natal, BRANCH_RELATIONS.clash)) {
-    return { key: "clash", label: "相冲", tone: "caution", priority: 100 };
+    return { key: "clash", label: "不合", tone: "caution", priority: 100 };
   }
   if (isBranchPunishment(current, natal)) {
     return { key: "punishment", label: "相刑", tone: "caution", priority: 90 };
   }
   if (matchesRelation(current, natal, BRANCH_RELATIONS.harmony)) {
-    return { key: "harmony", label: "相合", tone: "positive", priority: 76 };
+    return { key: "harmony", label: "合拍", tone: "positive", priority: 76 };
   }
   if (matchesRelation(current, natal, BRANCH_RELATIONS.harm)) {
-    return { key: "harm", label: "相害", tone: "caution", priority: 82 };
+    return { key: "harm", label: "内耗", tone: "caution", priority: 82 };
   }
   if (matchesRelation(current, natal, BRANCH_RELATIONS.break)) {
-    return { key: "break", label: "相破", tone: "caution", priority: 66 };
+    return { key: "break", label: "打破", tone: "caution", priority: 66 };
   }
   return null;
 }
@@ -365,10 +365,10 @@ function buildPillarInteractions(chart, dayGan, dayZhi) {
         key: `${pillar.key}-branch-${branchInteraction.key}`,
         pillarKey: pillar.key,
         pillarLabel: pillar.label,
-        source: `流日${dayZhi}`,
+        source: `今日运行${dayZhi}`,
         target: `${pillar.label}${natalZhi}`,
         shortText: `${pillar.label}${natalZhi} · ${branchInteraction.label}`,
-        detail: `流日地支${dayZhi}与本命${pillar.label}${natalZhi}${branchInteraction.label}`
+        detail: `今日运行地支${dayZhi}与本命${pillar.label}${natalZhi}${branchInteraction.label}`
       }));
     }
     if (stemInteraction) {
@@ -376,10 +376,10 @@ function buildPillarInteractions(chart, dayGan, dayZhi) {
         key: `${pillar.key}-stem-${stemInteraction.key}`,
         pillarKey: pillar.key,
         pillarLabel: pillar.label,
-        source: `流日${dayGan}`,
+        source: `今日运行${dayGan}`,
         target: `${pillar.label}${natalGan}`,
         shortText: `${pillar.label}${natalGan} · ${stemInteraction.label}`,
-        detail: `流日天干${dayGan}与本命${pillar.label}${natalGan}${stemInteraction.label}`
+        detail: `今日运行天干${dayGan}与本命${pillar.label}${natalGan}${stemInteraction.label}`
       }));
     }
   });
@@ -447,7 +447,7 @@ function getDailyBaziInsight(lunar, profile) {
     getElementLink(stemElement, branchElement),
     getElementLink(branchElement, selfElement)
   ].filter(Boolean)));
-  const primaryTheme = TEN_GOD_THEMES[primaryTenGod] || "流日主题";
+  const primaryTheme = TEN_GOD_THEMES[primaryTenGod] || "当日主题";
   const hiddenTheme = TEN_GOD_THEMES[mainHiddenTenGod.tenGod] || "";
   const friendlySummary = primaryTenGod === mainHiddenTenGod.tenGod
     ? `今天可以多关注${primaryTheme}，安排事情时先把重点放清楚。`
@@ -497,55 +497,55 @@ function getPersonalDayRelation(lunar, profile) {
   if (birthDayZhi === dayZhi) {
     return Object.assign({}, base, {
       key: "same",
-      label: "同气",
+      label: "同频",
       tone: "neutral",
       className: "personal-relation-neutral",
       scoreModifier: 1,
-      shortText: `日支${dayZhi}与命盘同气`,
+      shortText: `日支${dayZhi}与状态图同频`,
       description: "行动节奏更熟悉，仍以现实安排为先。"
     });
   }
   if (matchesRelation(birthDayZhi, dayZhi, BRANCH_RELATIONS.harmony)) {
     return Object.assign({}, base, {
       key: "harmony",
-      label: "相合",
+      label: "合拍",
       tone: "positive",
       className: "personal-relation-positive",
       scoreModifier: 3,
-      shortText: `日支${dayZhi}与命盘相合`,
+      shortText: `日支${dayZhi}与状态图合拍`,
       description: "沟通与协作条件较顺，适合推进准备充分的事项。"
     });
   }
   if (matchesRelation(birthDayZhi, dayZhi, BRANCH_RELATIONS.clash)) {
     return Object.assign({}, base, {
       key: "clash",
-      label: "相冲",
+      label: "不合",
       tone: "caution",
       className: "personal-relation-caution",
       scoreModifier: -4,
-      shortText: `日支${dayZhi}与命盘相冲`,
+      shortText: `日支${dayZhi}与状态图不合`,
       description: "节奏容易互相牵扯，重要决定建议多留一次确认。"
     });
   }
   if (matchesRelation(birthDayZhi, dayZhi, BRANCH_RELATIONS.harm)) {
     return Object.assign({}, base, {
       key: "harm",
-      label: "相害",
+      label: "内耗",
       tone: "caution",
       className: "personal-relation-caution",
       scoreModifier: -2,
-      shortText: `日支${dayZhi}与命盘相害`,
+      shortText: `日支${dayZhi}与状态图内耗`,
       description: "细节和沟通宜多留余量，避免只凭临时感受决定。"
     });
   }
   if (matchesRelation(birthDayZhi, dayZhi, BRANCH_RELATIONS.break)) {
     return Object.assign({}, base, {
       key: "break",
-      label: "相破",
+      label: "打破",
       tone: "caution",
       className: "personal-relation-caution",
       scoreModifier: -1,
-      shortText: `日支${dayZhi}与命盘相破`,
+      shortText: `日支${dayZhi}与状态图打破`,
       description: "执行中容易出现小变动，关键步骤提前复核更稳妥。"
     });
   }
@@ -555,8 +555,8 @@ function getPersonalDayRelation(lunar, profile) {
     tone: "neutral",
     className: "personal-relation-neutral",
     scoreModifier: 0,
-    shortText: `日支${dayZhi}与命盘无明显合冲`,
-    description: "个人关系较平稳，以当日黄历和现实条件为主要参考。"
+    shortText: `日支${dayZhi}与状态图无明显合冲`,
+    description: "个人关系较平稳，以当日历法和现实条件为主要参考。"
   });
 }
 
