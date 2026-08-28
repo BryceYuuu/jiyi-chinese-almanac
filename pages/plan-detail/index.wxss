@@ -158,7 +158,7 @@
 }
 
 .basis-row > text:first-child {
-  flex: 0 0 100rpx;
+  flex: 0 0 124rpx;
   color: var(--color-muted);
 }
 

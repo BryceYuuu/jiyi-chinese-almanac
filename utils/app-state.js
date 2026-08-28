@@ -4,6 +4,7 @@ const { getDisplayMode } = require("./preferences");
 const { getProfile } = require("./profile");
 const { getStateVersion } = require("./state-version");
 const { getThemeConfig, getThemeKey } = require("./theme");
+const { getVocabulary, isClassicCopyEnabled } = require("./vocabulary");
 
 function getAppSnapshot(referenceDate, options) {
   const settings = options || {};
@@ -15,6 +16,8 @@ function getAppSnapshot(referenceDate, options) {
   return {
     stateVersion: getStateVersion(),
     profile,
+    classicCopyEnabled: isClassicCopyEnabled(profile),
+    copy: getVocabulary(profile),
     mode: getDisplayMode(profile),
     theme,
     themeClass: themeConfig.className,

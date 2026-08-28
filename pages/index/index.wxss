@@ -508,6 +508,7 @@
 .bazi-signal-label {
   color: var(--color-subtle);
   font-size: 19rpx;
+  line-height: 1.35;
 }
 
 .bazi-theme-keywords {
@@ -634,6 +635,9 @@
 }
 
 .bazi-label-with-mark {
+  display: flex;
+  min-width: 0;
+  align-items: center;
   gap: 7rpx;
   color: var(--color-muted);
   font-size: 21rpx;

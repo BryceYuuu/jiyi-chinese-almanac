@@ -3,11 +3,13 @@ const { getBirthChart } = require("../../utils/bazi");
 const { getDisplayMode } = require("../../utils/preferences");
 const { getProfile, saveProfile } = require("../../utils/profile");
 const { getThemeConfig, getThemeKey } = require("../../utils/theme");
+const { getVocabulary } = require("../../utils/vocabulary");
 
 Page({
   data: {
     themeClass: "theme-cinnabar",
     themeColor: "#C94732",
+    copy: getVocabulary({}),
     isEdit: false,
     isBirthFocus: false,
     setupTitle: "完善个人信息",
@@ -63,6 +65,7 @@ Page({
     const initialData = {
       themeClass: themeConfig.className,
       themeColor: themeConfig.primary,
+      copy: getVocabulary(profile),
       isEdit,
       isBirthFocus,
       setupTitle: isBirthFocus ? "完善出生信息" : "完善个人信息",

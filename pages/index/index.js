@@ -9,6 +9,7 @@ const { ensureProfileReady, getDisplayName } = require("../../utils/profile");
 const { getAlmanacTerm } = require("../../data/almanac-terms");
 const { getThemeConfig } = require("../../utils/theme");
 const { getTenGodKeywords } = require("../../utils/bazi");
+const { getVocabulary, translateCopyText } = require("../../utils/vocabulary");
 
 const HOME_VIEW_VERSION = "2026.07.27-2";
 
@@ -17,6 +18,8 @@ Page({
     themeClass: "theme-cinnabar",
     themeTextureTop: "/assets/materials/poster-coral-paper.jpg",
     themeTextureBody: "/assets/materials/poster-coral-flow.jpg",
+    copy: getVocabulary({}),
+    classicCopyEnabled: false,
     mode: "friendly",
     isFriendly: true,
     isProfessional: false,
@@ -61,6 +64,7 @@ Page({
       date.getDate(),
       mode,
       snapshot.theme,
+      snapshot.classicCopyEnabled ? "classic" : "modern",
       snapshot.stateVersion
     ].join("|");
 
@@ -88,6 +92,8 @@ Page({
       themeClass: snapshot.themeClass,
       themeTextureTop: theme.textureTop,
       themeTextureBody: theme.textureBody,
+      copy: snapshot.copy,
+      classicCopyEnabled: snapshot.classicCopyEnabled,
       mode,
       isFriendly: mode === "friendly",
       isProfessional: mode === "professional",
@@ -98,11 +104,11 @@ Page({
       profile,
       termHelpEnabled: profile.termHelpEnabled === true,
       displayName: getDisplayName(profile),
-      profileLine: profile.birthTime
-        ? "四柱已完善 · 个人提醒已启用"
+      profileLine: translateCopyText(profile.birthTime
+        ? "密码已完善 · 个人提醒已启用"
         : profile.zodiac
           ? `生肖${profile.zodiac} · 已启用个人提醒`
-        : "通用日历 · 点此完善生日",
+        : "通用日历 · 点此完善生日", snapshot.classicCopyEnabled),
       greeting: this.getGreeting(date),
       today,
       baziThemeKeywords: today.baziInsight
@@ -147,7 +153,11 @@ Page({
 
   openTerm(event) {
     if (!this.data.termHelpEnabled) return;
-    const term = getAlmanacTerm(event.currentTarget.dataset.term, event.currentTarget.dataset.value);
+    const term = getAlmanacTerm(
+      event.currentTarget.dataset.term,
+      event.currentTarget.dataset.value,
+      this.data.classicCopyEnabled
+    );
     if (!term) return;
     this.setData({ activeTerm: term, showTermSheet: true });
   },

@@ -7,12 +7,15 @@ const { getPlanLifecycle } = require("../../utils/plans");
 const { consumeCalendarTarget } = require("../../utils/preferences");
 const { getAlmanacTerm } = require("../../data/almanac-terms");
 const { getThemeConfig } = require("../../utils/theme");
+const { getVocabulary } = require("../../utils/vocabulary");
 
 Page({
   data: {
     themeClass: "theme-cinnabar",
     themeTextureTop: "/assets/materials/poster-coral-paper.jpg",
     themeTextureBody: "/assets/materials/poster-coral-flow.jpg",
+    copy: getVocabulary({}),
+    classicCopyEnabled: false,
     weekdays: ["一", "二", "三", "四", "五", "六", "日"],
     viewYear: 0,
     viewMonth: 0,
@@ -29,7 +32,7 @@ Page({
     isCheckedIn: false,
     checkinText: "今日留印",
     checkinClass: "checkin-button",
-    profileNotice: "设置生日后，可增加生肖避冲提醒",
+    profileNotice: "设置生日后，可增加生肖搭配提醒",
     termHelpEnabled: false,
     showTermSheet: false,
     activeTerm: null
@@ -109,6 +112,8 @@ Page({
       themeClass: snapshot.themeClass,
       themeTextureTop: theme.textureTop,
       themeTextureBody: theme.textureBody,
+      copy: snapshot.copy,
+      classicCopyEnabled: snapshot.classicCopyEnabled,
       viewYear: year,
       viewMonth: month,
       monthTitle: `${year}年${month}月`,
@@ -141,7 +146,11 @@ Page({
 
   openTerm(event) {
     if (!this.data.termHelpEnabled) return;
-    const term = getAlmanacTerm(event.currentTarget.dataset.term, event.currentTarget.dataset.value);
+    const term = getAlmanacTerm(
+      event.currentTarget.dataset.term,
+      event.currentTarget.dataset.value,
+      this.data.classicCopyEnabled
+    );
     if (!term) return;
     this.setData({ activeTerm: term, showTermSheet: true });
   },

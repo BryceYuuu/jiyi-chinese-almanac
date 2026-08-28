@@ -23,7 +23,7 @@
     <text class="plan-lifecycle-note" wx:if="{{lifecycleHint}}">{{lifecycleHint}}</text>
     <text class="basis-reason">{{plan.reason}}</text>
     <view class="basis-action"><view></view><text>{{plan.action}}</text></view>
-    <view class="basis-row"><text>推荐吉时</text><text>{{plan.recommendedTime}}</text></view>
+    <view class="basis-row"><text>{{copy.recommendedTime}}</text><text>{{plan.recommendedTime}}</text></view>
     <view class="basis-row" wx:if="{{plan.risk}}"><text>风险提醒</text><text>{{plan.risk}}</text></view>
     <view class="basis-row"><text>综合依据</text><text>{{plan.basisExplanation}}</text></view>
   </view>

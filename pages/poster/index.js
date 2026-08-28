@@ -1,10 +1,12 @@
 const { getPosterVisual } = require("../../data/visual-assets");
+const { getProfile } = require("../../utils/profile");
 const { getThemeConfig, getThemeKey } = require("../../utils/theme");
+const { isClassicCopyEnabled, translateCopyText } = require("../../utils/vocabulary");
 
 const POSTER_PREVIEW_CACHE = {};
 const POSTER_PREVIEW_KEYS = [];
 const GENERATION_SEQUENCE_KEY = "jiyi_poster_generation_sequence";
-const POSTER_RENDER_VERSION = "landscape-6";
+const POSTER_RENDER_VERSION = "landscape-7";
 
 function getTitleSizeClass(title) {
   const length = Array.from(`${title || ""}`).length;
@@ -46,6 +48,7 @@ Page({
 
   onLoad(options) {
     const themeConfig = getThemeConfig(getThemeKey());
+    this.classicCopyEnabled = isClassicCopyEnabled(getProfile());
     this.posterType = options && options.type ? options.type : "daily";
     this.planId = options && options.id ? options.id : "";
     this.dateKey = options && options.date ? options.date : "";
@@ -108,9 +111,11 @@ Page({
         lunar: `农历${plan.lunar}`,
         title: plan.title,
         eyebrow: `${plan.actionName}计划`,
-        headline: `${getPlanDisplayLevel(plan)} · 择日参考`,
-        primary: plan.action,
-        secondary: plan.recommendedTime ? `推荐吉时 ${plan.recommendedTime}` : "",
+        headline: translateCopyText(`${getPlanDisplayLevel(plan)} · 状态参考`, this.classicCopyEnabled),
+        primary: translateCopyText(plan.action, this.classicCopyEnabled),
+        secondary: plan.recommendedTime
+          ? translateCopyText(`推荐好时段 ${plan.recommendedTime}`, this.classicCopyEnabled)
+          : "",
         footer: "把选好的日子，变成真正要完成的事。",
         actionKey: plan.actionKey
       };
@@ -129,13 +134,15 @@ Page({
         weekday: draft.weekday,
         lunar: `农历${draft.lunar}`,
         title: draft.title,
-        eyebrow: `${draft.actionName}推荐日`,
-        headline: `${getPlanDisplayLevel(draft)} · 择日参考`,
-        primary: draft.action,
+        eyebrow: translateCopyText(`${draft.actionName}元气推荐`, this.classicCopyEnabled),
+        headline: translateCopyText(`${getPlanDisplayLevel(draft)} · 状态参考`, this.classicCopyEnabled),
+        primary: translateCopyText(draft.action, this.classicCopyEnabled),
         secondary: draft.recommendedGoodTime
-          ? `推荐吉时 ${draft.recommendedGoodTime}`
-          : draft.goodTimeList && draft.goodTimeList[0] ? `推荐吉时 ${draft.goodTimeList[0]}` : "",
-        footer: "依据事项命中、日值、吉时与避冲综合计算。",
+          ? translateCopyText(`推荐好时段 ${draft.recommendedGoodTime}`, this.classicCopyEnabled)
+          : draft.goodTimeList && draft.goodTimeList[0]
+            ? translateCopyText(`推荐好时段 ${draft.goodTimeList[0]}`, this.classicCopyEnabled)
+            : "",
+        footer: translateCopyText("依据事项命中、日值、好时段与个人搭配综合计算。", this.classicCopyEnabled),
         actionKey: draft.actionKey
       };
     }
@@ -143,7 +150,6 @@ Page({
     const inspirations = require("../../data/inspirations");
     const { getDailyInspiration, getDailyModel } = require("../../utils/calendar");
     const { parseDate } = require("../../utils/date");
-    const { getProfile } = require("../../utils/profile");
     const date = parseDate(this.dateKey) || new Date();
     const summary = getDailyModel(date, getProfile(), { professional: false });
     const inspiration = getDailyInspiration(inspirations, date);
@@ -156,7 +162,7 @@ Page({
       weekday: summary.weekday,
       lunar: summary.lunarDateLine,
       title: inspiration.keyword,
-      eyebrow: "今日吉易",
+      eyebrow: translateCopyText("今日状态播报", this.classicCopyEnabled),
       headline: `${summary.grade} · ${summary.rhythm}`,
       primary: inspiration.text,
       secondary: `今日适合 ${summary.suitable.join(" · ")}`,
@@ -186,7 +192,15 @@ Page({
   getPreviewCacheKey(style) {
     const content = this.posterContent || {};
     const visual = getPosterVisual(this.visualSeed, style, this.generationSequence);
-    return [POSTER_RENDER_VERSION, content.kind, content.dateKey, content.title, style, visual.key].join("|");
+    return [
+      POSTER_RENDER_VERSION,
+      this.classicCopyEnabled ? "classic" : "modern",
+      content.kind,
+      content.dateKey,
+      content.title,
+      style,
+      visual.key
+    ].join("|");
   },
 
   scheduleRender(delay) {

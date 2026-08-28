@@ -1,6 +1,7 @@
 const STORAGE_KEY = "jiyi_user_profile";
 const { setDisplayMode } = require("./preferences");
 const { bumpStateVersion } = require("./state-version");
+const { applyCopyNavigation } = require("./vocabulary");
 
 const DEFAULT_PROFILE = {
   nickname: "",
@@ -11,6 +12,7 @@ const DEFAULT_PROFILE = {
   defaultMode: "friendly",
   avoidOwnChong: true,
   termHelpEnabled: false,
+  classicCopyEnabled: false,
   completed: false
 };
 
@@ -28,11 +30,12 @@ function hasBirthday() {
 }
 
 function saveProfile(profile) {
-  const nextProfile = Object.assign({}, DEFAULT_PROFILE, profile, {
+  const nextProfile = Object.assign({}, DEFAULT_PROFILE, getProfile(), profile, {
     completed: true
   });
   wx.setStorageSync(STORAGE_KEY, nextProfile);
   setDisplayMode(nextProfile.defaultMode, { silent: true });
+  applyCopyNavigation(nextProfile);
   bumpStateVersion();
   return nextProfile;
 }

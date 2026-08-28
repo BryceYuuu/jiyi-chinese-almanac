@@ -3,6 +3,7 @@ let solarLoadFailed = false;
 
 const { addDays, getDayDiff, parseDate } = require("./date");
 const { getBirthChart, getDailyBaziInsight, getPersonalDayRelation } = require("./bazi");
+const { isClassicCopyEnabled, translateCopyData } = require("./vocabulary");
 
 const dateSummaryCache = {};
 const goodDayCache = {};
@@ -10,7 +11,7 @@ const birthZodiacCache = {};
 const monthCalendarCache = {};
 const lunarDateCache = {};
 
-const CALENDAR_RULE_VERSION = "2026.07.27-1";
+const CALENDAR_RULE_VERSION = "2026.07.29-1";
 
 const WEEKDAYS = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
 
@@ -373,7 +374,8 @@ function getProfileSignature(profile) {
     profile.birthday || "",
     profile.birthTime || "",
     profile.zodiac || "",
-    profile.avoidOwnChong === false ? "keep-chong" : "avoid-chong"
+    profile.avoidOwnChong === false ? "keep-chong" : "avoid-chong",
+    isClassicCopyEnabled(profile) ? "classic-copy" : "modern-copy"
   ].join(":");
 }
 
@@ -391,6 +393,23 @@ function getStableIndex(value, length) {
 
 function normalizeTaboos(list) {
   return list.length === 1 && list[0] === "无" ? [] : list;
+}
+
+function formatStatusLevel(value) {
+  const labels = {
+    "大吉": "元气",
+    "吉": "在线",
+    "中": "平淡",
+    "凶": "低落",
+    "大凶": "摆烂"
+  };
+  return labels[value] || value;
+}
+
+function formatDayType(value) {
+  if (value === "黄道") return "顺行日";
+  if (value === "黑道") return "逆行日";
+  return value;
 }
 
 function buildDayChongSha(lunar) {
@@ -413,7 +432,7 @@ function buildProfessionalData(lunar, yi, ji, goodTimes) {
       ganZhi: time.getGanZhi(),
       naYin: time.getNaYin(),
       tianShen: time.getTianShen(),
-      luck,
+      luck: formatStatusLevel(luck),
       luckClass: luck === "吉" ? "pro-time-luck pro-time-luck-good" : "pro-time-luck pro-time-luck-bad",
       chongSha: `冲${time.getChongDesc()} · 煞${time.getSha()}`,
       yiText: time.getYi().slice(0, 3).join("、") || "无",
@@ -429,47 +448,47 @@ function buildProfessionalData(lunar, yi, ji, goodTimes) {
     dayNaYin: lunar.getDayNaYin(),
     zhiXing: `${lunar.getZhiXing()}日`,
     tianShenName,
-    tianShenLuck,
-    tianShenType,
+    tianShenLuck: formatStatusLevel(tianShenLuck),
+    tianShenType: formatDayType(tianShenType),
     tianShenClass: tianShenLuck === "吉" ? "pro-day-badge pro-day-badge-good" : "pro-day-badge pro-day-badge-bad",
-    tianShen: `${tianShenName}（${tianShenLuck}）`,
-    xiu: `${lunar.getXiu()}宿 · ${lunar.getXiuLuck()}`,
+    tianShen: `${tianShenName}（${formatStatusLevel(tianShenLuck)}）`,
+    xiu: `${lunar.getXiu()}宿 · ${formatStatusLevel(lunar.getXiuLuck())}`,
     xiuSong: lunar.getXiuSong(),
     nineStar: `${nineStar.getNumber()}${nineStar.getColor()}${nineStar.getWuXing()}`,
-    nineStarDetail: `${nineStar.getNameInBeiDou()} · ${nineStar.getPositionDesc()} · 玄空${nineStar.getNameInXuanKong()}${nineStar.getLuckInXuanKong()}`,
+    nineStarDetail: `${nineStar.getNameInBeiDou()} · ${nineStar.getPositionDesc()} · 玄空${nineStar.getNameInXuanKong()}${formatStatusLevel(nineStar.getLuckInXuanKong())}`,
     liuYao: lunar.getLiuYao(),
     yueXiang: lunar.getYueXiang(),
     wuHou: `${lunar.getHou()} · ${lunar.getWuHou()}`,
     chongSha: buildDayChongSha(lunar),
     dayShengXiao: lunar.getDayShengXiao(),
     cai: lunar.getDayPositionCaiDesc(),
-    jiShen: jiShen.length ? jiShen.slice(0, 10) : ["吉神不显"],
-    xiongSha: xiongSha.length ? xiongSha.slice(0, 10) : ["凶煞不显"],
-    goodTimes: goodTimes.length ? goodTimes : ["今日吉时不明显"],
+    jiShen: jiShen.length ? jiShen.slice(0, 10) : ["加成能量不显"],
+    xiongSha: xiongSha.length ? xiongSha.slice(0, 10) : ["减益能量不显"],
+    goodTimes: goodTimes.length ? goodTimes : ["今日好时段不明显"],
     coreFacts: [
       { label: "日柱", value: lunar.getDayInGanZhi(), detail: `纳音 ${lunar.getDayNaYin()}` },
-      { label: "建除", value: `${lunar.getZhiXing()}日`, detail: "建除十二神" },
-      { label: "值神", value: tianShenName, detail: `${tianShenType} · ${tianShenLuck}` },
-      { label: "二十八宿", value: `${lunar.getXiu()}宿`, detail: lunar.getXiuLuck() },
-      { label: "日九星", value: `${nineStar.getNumber()}${nineStar.getColor()}${nineStar.getWuXing()}`, detail: `${nineStar.getNameInBeiDou()} · ${nineStar.getPositionDesc()}` },
+      { label: "状态类型", value: `${lunar.getZhiXing()}日`, detail: "状态类型十二神" },
+      { label: "当值能量", value: tianShenName, detail: `${formatDayType(tianShenType)} · ${formatStatusLevel(tianShenLuck)}` },
+      { label: "二十八宿", value: `${lunar.getXiu()}宿`, detail: formatStatusLevel(lunar.getXiuLuck()) },
+      { label: "日九型能量", value: `${nineStar.getNumber()}${nineStar.getColor()}${nineStar.getWuXing()}`, detail: `${nineStar.getNameInBeiDou()} · ${nineStar.getPositionDesc()}` },
       { label: "六曜月相", value: lunar.getLiuYao(), detail: lunar.getYueXiang() }
     ],
     positionFacts: [
-      { label: "喜神", value: lunar.getDayPositionXiDesc() },
-      { label: "福神", value: lunar.getDayPositionFuDesc() },
-      { label: "财神", value: lunar.getDayPositionCaiDesc() },
+      { label: "好事方位", value: lunar.getDayPositionXiDesc() },
+      { label: "好福方位", value: lunar.getDayPositionFuDesc() },
+      { label: "好运方位", value: lunar.getDayPositionCaiDesc() },
       { label: "阳贵", value: lunar.getDayPositionYangGuiDesc() },
       { label: "阴贵", value: lunar.getDayPositionYinGuiDesc() },
       { label: "太岁", value: lunar.getDayPositionTaiSuiDesc() }
     ],
     observationFacts: [
-      { label: "胎神占方", value: lunar.getDayPositionTai() },
+      { label: "孕期留意区", value: lunar.getDayPositionTai() },
       { label: "旬空", value: lunar.getDayXunKong() },
       { label: "物候", value: `${lunar.getHou()} · ${lunar.getWuHou()}` },
-      { label: "日禄", value: lunar.getDayLu() },
-      { label: "九星玄空", value: `${nineStar.getNameInXuanKong()} · ${nineStar.getLuckInXuanKong()} · ${nineStar.getPositionDesc()}` },
-      { label: "彭祖百忌·干", value: lunar.getPengZuGan() },
-      { label: "彭祖百忌·支", value: lunar.getPengZuZhi() }
+      { label: "今日顺手气", value: lunar.getDayLu() },
+      { label: "九型能量玄空", value: `${nineStar.getNameInXuanKong()} · ${formatStatusLevel(nineStar.getLuckInXuanKong())} · ${nineStar.getPositionDesc()}` },
+      { label: "古法提醒·干", value: lunar.getPengZuGan() },
+      { label: "古法提醒·支", value: lunar.getPengZuZhi() }
     ],
     timeDetails
   };
@@ -525,7 +544,7 @@ function getDateSummary(date, profile, options) {
   if (dateSummaryCache[cacheKey]) return dateSummaryCache[cacheKey];
 
   const solar = getSolar();
-  if (!solar) return getFallbackDateSummary(date);
+  if (!solar) return translateCopyData(getFallbackDateSummary(date), isClassicCopyEnabled(profile));
   const solarDate = solar.fromDate(date);
   const lunar = solarDate.getLunar();
   lunarDateCache[formatYmd(date)] = lunar;
@@ -589,8 +608,9 @@ function getDateSummary(date, profile, options) {
     },
     professional: includeProfessional ? buildProfessionalData(lunar, yi, ji, goodTimes) : null
   };
-  dateSummaryCache[cacheKey] = summary;
-  return summary;
+  const displaySummary = translateCopyData(summary, isClassicCopyEnabled(profile));
+  dateSummaryCache[cacheKey] = displaySummary;
+  return displaySummary;
 }
 
 function getFallbackDateSummary(date) {
@@ -608,26 +628,26 @@ function getFallbackDateSummary(date) {
     suitable: ["学业", "整理", "沟通"],
     avoid: ["冲动消费", "临时拍板"],
     reminder: "适合稳步推进，但别急着做重大决定。",
-    chongSha: "冲煞信息待构建",
+    chongSha: "撞点提醒信息待构建",
     personalTip: "",
     personalRelation: null,
     baziInsight: null,
     modelVersion: CALENDAR_RULE_VERSION,
     statusText: "守成",
-    grade: "中",
+    grade: "平淡",
     rhythm: "守成",
     ratingScore: 50,
     rhythmDescription: "按既定安排稳步推进，先把已有事项做好。",
     ratingClass: "rating-neutral",
     dailyConclusion: {
-      grade: "中",
+      grade: "平淡",
       rhythm: "守成",
       ratingScore: 50,
       ratingClass: "rating-neutral",
       suitable: ["学业", "整理", "沟通"],
       avoid: ["冲动消费", "临时拍板"],
       reminder: "适合稳步推进，但别急着做重大决定。",
-      chongSha: "冲煞信息待构建"
+      chongSha: "撞点提醒信息待构建"
     },
     professional: {
       yi: ["构建 npm 后显示"],
@@ -682,8 +702,8 @@ function buildDayRating(lunar, yi, ji, profile) {
 
   score = clamp(score, 0, 100);
   const grade = score >= 78
-    ? "大吉"
-    : score >= 62 ? "吉" : score >= 46 ? "中" : score >= 30 ? "凶" : "大凶";
+    ? "元气"
+    : score >= 62 ? "在线" : score >= 46 ? "平淡" : score >= 30 ? "低落" : "摆烂";
   const dayOfficer = lunar.getZhiXing();
   const tianShenLuck = lunar.getDayTianShenLuck();
   let rhythm = "守成";
@@ -711,9 +731,9 @@ function buildDayRating(lunar, yi, ji, profile) {
     grade,
     rhythm,
     description: descriptions[rhythm],
-    className: grade === "大吉" || grade === "吉"
+    className: grade === "元气" || grade === "在线"
       ? "rating-positive"
-      : grade === "中" ? "rating-neutral" : "rating-caution"
+      : grade === "平淡" ? "rating-neutral" : "rating-caution"
   };
 }
 
@@ -791,9 +811,9 @@ function getActionRule(key) {
     exclude,
     penalty,
     excludeText: repeatsMatch
-      ? "若上述核心事项出现在当日“忌”中，该日期直接排除"
-      : `当天忌${exclude.join("、")}时直接排除`,
-    penaltyText: penalty.length ? `当天忌${penalty.join("、")}时保留候选，但降低排名` : "",
+      ? "若上述核心事项出现在当日避坑清单中，该日期直接排除"
+      : `当天避坑清单出现${exclude.join("、")}时直接排除`,
+    penaltyText: penalty.length ? `当天避坑清单出现${penalty.join("、")}时保留候选，但降低排名` : "",
     yi: action.yi.slice(),
     ji: coreJi.slice()
   };
@@ -938,32 +958,32 @@ function buildDateRecommendation(actionKey, action, context) {
   const variantSeed = `${dateKey}|${actionKey}|${dayOfficerName}|${tianShenName}`;
   const executionDetail = dateGuidance.execution[getStableIndex(`${variantSeed}|execution`, dateGuidance.execution.length)];
   const riskDetail = dateGuidance.risk[getStableIndex(`${variantSeed}|risk`, dateGuidance.risk.length)];
-  const jiShenText = jiShen.length ? `吉神见${jiShen.slice(0, 2).join("、")}` : "吉神助力不突出";
-  const xiongShaText = xiongSha.length ? `另见${xiongSha.slice(0, 2).join("、")}` : "凶煞影响不突出";
+  const jiShenText = jiShen.length ? `加成能量见${jiShen.slice(0, 2).join("、")}` : "加成能量助力不突出";
+  const xiongShaText = xiongSha.length ? `另见${xiongSha.slice(0, 2).join("、")}` : "减益能量影响不突出";
   const weekdayFocus = WEEKDAY_FOCUS_LABELS[weekdayIndex] || "现实安排";
   const matchVariants = yiHit.length ? [
-    `黄历宜项命中${yiHit.length}项：${yiHit.join("、")}`,
-    `${yiHit.join("、")}列入当日宜项，对${action.name}形成直接支持`,
+    `状态命中${yiHit.length}项：${yiHit.join("、")}`,
+    `${yiHit.join("、")}列入当日适合清单，对${action.name}形成直接支持`,
     `当天对${action.name}的正向依据为${yiHit.join("、")}`
   ] : [
-    "未直接命中特定宜项，以日值与时辰条件进入候选",
-    "事项宜项不突出，本次主要由日值、值神与吉时支持",
-    "当日无直接事项宜项，依综合条件保留为候选"
+    "未直接命中特定适合项，以日值与时段条件进入候选",
+    "事项适合项不突出，本次主要由日值、当值能量与好时段支持",
+    "当日无直接适合项，依综合条件保留为候选"
   ];
   const matchText = matchVariants[getStableIndex(`${variantSeed}|reason`, matchVariants.length)];
   const whyRecommended = `${matchText}；${dayOfficerName}日侧重${officerFocus}，${tianShenName}值日，${shenGuidance.reason}。`;
-  const reason = `${matchText}。${dayOfficerName}日侧重${officerFocus}，${tianShenName}（${tianShenLuck}）值日，${shenGuidance.reason}；${jiShenText}，${xiongShaText}，执行条件偏向${weekdayFocus}。`;
+  const reason = `${matchText}。${dayOfficerName}日侧重${officerFocus}，${tianShenName}（${formatStatusLevel(tianShenLuck)}）值日，${shenGuidance.reason}；${jiShenText}，${xiongShaText}，执行条件偏向${weekdayFocus}。`;
   const weekdayGuidance = WEEKDAY_EXECUTION_GUIDANCE[weekdayIndex] || "按当天现实安排预留缓冲";
   const preferredGoodTime = goodTimes.length
     ? goodTimes[getStableIndex(`${variantSeed}|time`, goodTimes.length)]
     : "";
   const actionBase = `${selectedAdvice}；${executionDetail}。${weekdayGuidance}`;
-  let caution = `已排除${action.name}核心忌项。${riskDetail}；${chongText}，${xiongShaText}。`;
+  let caution = `已排除${action.name}重点避坑。${riskDetail}；${chongText}，${xiongShaText}。`;
   if (lightJiHit.length) {
-    caution = `当天仍见忌${lightJiHit.join("、")}，${riskDetail}；${chongText}，${xiongShaText}。`;
+    caution = `当天仍有避坑项：${lightJiHit.join("、")}。${riskDetail}；${chongText}，${xiongShaText}。`;
   }
   if (hasPersonalChong) {
-    caution = `该日与你的生肖相冲，因你选择保留全部日期而继续展示。${riskDetail}，并为关键步骤预留替代时间。`;
+    caution = `该日与你的生肖不合，因你选择保留全部日期而继续展示。${riskDetail}，并为关键步骤预留替代时间。`;
   }
 
   return {
@@ -982,14 +1002,14 @@ function buildDateRecommendation(actionKey, action, context) {
 }
 
 function buildPersonalBasis(profile) {
-  if (!profile || !profile.zodiac) return "未设置生肖，本次按通用黄历筛选";
+  if (!profile || !profile.zodiac) return "未设置生肖，本次按通用历法筛选";
   const chart = getBirthChart(profile);
   if (chart && profile.avoidOwnChong) {
-    return `已结合日主${chart.dayMaster}，并避开与生肖${profile.zodiac}相冲的日期`;
+    return `已结合主标签${chart.dayMaster}，并避开与生肖${profile.zodiac}不合的日期`;
   }
-  if (chart) return `已结合日主${chart.dayMaster}，本次保留生肖相冲日期`;
-  if (profile.avoidOwnChong) return `已避开与生肖${profile.zodiac}相冲的日期`;
-  return `已识别生肖${profile.zodiac}，本次保留相冲日期`;
+  if (chart) return `已结合主标签${chart.dayMaster}，本次保留全部日期`;
+  if (profile.avoidOwnChong) return `已避开与生肖${profile.zodiac}不合的日期`;
+  return `已识别生肖${profile.zodiac}，本次保留全部日期`;
 }
 
 function createGoodDaySearchContext(actionKey, rangeDays, profile, options) {
@@ -1023,6 +1043,7 @@ function createGoodDaySearchContext(actionKey, rangeDays, profile, options) {
     actionKey,
     action,
     profile: profile || {},
+    classicCopyEnabled: isClassicCopyEnabled(profile),
     startDate,
     searchDays,
     dayType,
@@ -1089,7 +1110,7 @@ function evaluateGoodDayDate(context, index) {
 
   const tianShenName = lunar.getDayTianShen();
   const tianShenLuck = lunar.getDayTianShenLuck();
-  const tianShen = `${tianShenName}（${tianShenLuck}）`;
+  const tianShen = `${tianShenName}（${formatStatusLevel(tianShenLuck)}）`;
   const dayOfficerName = lunar.getZhiXing();
   const dayOfficer = `${dayOfficerName}日`;
   const jiShen = lunar.getDayJiShen();
@@ -1112,18 +1133,18 @@ function evaluateGoodDayDate(context, index) {
     lightJiHit,
     hasPersonalChong
   });
-  const jiShenText = jiShen.length ? jiShen.slice(0, 4).join("、") : "当日吉神助力不突出";
-  const xiongShaText = xiongSha.length ? xiongSha.slice(0, 4).join("、") : "当日凶煞影响不突出";
-  const goodTimesText = goodTimeInfo.display.length ? goodTimeInfo.display.join(" / ") : "无符合当前时段的明显吉时";
+  const jiShenText = jiShen.length ? jiShen.slice(0, 4).join("、") : "当日加成能量助力不突出";
+  const xiongShaText = xiongSha.length ? xiongSha.slice(0, 4).join("、") : "当日减益能量影响不突出";
+  const goodTimesText = goodTimeInfo.display.length ? goodTimeInfo.display.join(" / ") : "无符合当前时段的明显好时段";
   const personalBasis = buildPersonalBasis(profile);
   const personalConflictText = !profile.zodiac
-    ? "未设置生肖，本次不执行个人避冲"
+    ? "未设置生肖，本次不执行个人搭配提醒"
     : hasPersonalChong
-      ? `与生肖${profile.zodiac}相冲，按你的设置保留并已降低排名`
-      : `未与生肖${profile.zodiac}相冲`;
+      ? `与生肖${profile.zodiac}不合，按你的设置保留并已降低排名`
+      : `与生肖${profile.zodiac}搭配平稳`;
   const personalRelationText = personalRelation
     ? `${personalRelation.shortText} · ${personalRelation.label}`
-    : "未设置出生时间，本次不计算四柱关系";
+    : "未设置出生时间，本次不计算密码关系";
   const hasPersonalRelationRisk = Boolean(
     personalRelation && ["clash", "harm", "break"].includes(personalRelation.key)
   );
@@ -1142,10 +1163,10 @@ function evaluateGoodDayDate(context, index) {
     scoreBreakdown: [
       { label: "事项匹配", value: formatScoreContribution(scoreResult.breakdown.match) },
       { label: "日值条件", value: formatScoreContribution(scoreResult.breakdown.dayValue) },
-      { label: "吉凶神", value: formatScoreContribution(scoreResult.breakdown.spirits) },
-      { label: "可用吉时", value: formatScoreContribution(scoreResult.breakdown.goodTimes) },
+      { label: "加减能量", value: formatScoreContribution(scoreResult.breakdown.spirits) },
+      { label: "可用时段", value: formatScoreContribution(scoreResult.breakdown.goodTimes) },
       ...(personalRelation
-        ? [{ label: "命盘关系", value: formatScoreContribution(scoreResult.breakdown.personal) }]
+        ? [{ label: "状态图关系", value: formatScoreContribution(scoreResult.breakdown.personal) }]
         : []),
       { label: "冲突扣分", value: formatScoreContribution(scoreResult.breakdown.conflict) }
     ],
@@ -1175,34 +1196,34 @@ function evaluateGoodDayDate(context, index) {
     goodTimes: goodTimesText,
     goodTimeList: goodTimeInfo.display.slice(),
     yiBasis: yiHit.length ? yiHit.join("、") : "未直接命中，以日值条件进入候选",
-    jiBasis: lightJiHit.length ? lightJiHit.join("、") : "核心忌项已在筛选阶段排除",
+    jiBasis: lightJiHit.length ? lightJiHit.join("、") : "重点避坑已在筛选阶段排除",
     hasConflict: lightJiHit.length > 0 || hasPersonalChong || hasPersonalRelationRisk,
     conflictText: hasPersonalChong
-      ? "个人冲日已降权"
+      ? "个人不合拍日已降权"
       : hasPersonalRelationRisk
-        ? `命盘日支${personalRelation.label}，已小幅调整排序`
-        : lightJiHit.length ? `仍见忌${lightJiHit.join("、")}` : "核心忌项已排除",
+        ? `状态图日支${personalRelation.label}，已小幅调整排序`
+        : lightJiHit.length ? `仍有避坑项：${lightJiHit.join("、")}` : "重点避坑已排除",
     positiveEvidence: [
-      { label: "事项匹配", value: yiHit.length ? `命中${yiHit.length}项：${yiHit.join("、")}` : "无直接宜项，以综合条件进入候选" },
-      { label: "值神", value: tianShen },
-      { label: "可用吉时", value: `${availableGoodTimeCount}段 · ${goodTimesText}` }
+      { label: "事项匹配", value: yiHit.length ? `命中${yiHit.length}项：${yiHit.join("、")}` : "无直接适合项，以综合条件进入候选" },
+      { label: "当值能量", value: tianShen },
+      { label: "可用时段", value: `${availableGoodTimeCount}段 · ${goodTimesText}` }
     ],
     neutralEvidence: [
-      { label: "每日结论", value: `${dailyConclusion.grade} · ${dailyConclusion.rhythm}；${dailyConclusion.reminder}` },
-      { label: "建除日值", value: `${dayOfficer} · ${DAY_OFFICER_FOCUS[dayOfficerName] || "稳妥推进"}` },
+      { label: "每日状态", value: `${dailyConclusion.grade} · ${dailyConclusion.rhythm}；${dailyConclusion.reminder}` },
+      { label: "今日状态类型", value: `${dayOfficer} · ${DAY_OFFICER_FOCUS[dayOfficerName] || "稳妥推进"}` },
       { label: "现实安排", value: WEEKDAY_EXECUTION_GUIDANCE[date.getDay()] }
     ],
     conflictEvidence: [
-      { label: "事项忌项", value: lightJiHit.length ? `仍见忌${lightJiHit.join("、")}` : "核心忌项已排除" },
-      { label: "凶煞", value: xiongShaText },
-      { label: "冲煞", value: chongText }
+      { label: "避坑清单", value: lightJiHit.length ? `仍有避坑项：${lightJiHit.join("、")}` : "重点避坑已排除" },
+      { label: "减益能量", value: xiongShaText },
+      { label: "撞点提醒", value: chongText }
     ],
     personalEvidence: [
       { label: "生肖筛选", value: personalBasis },
-      { label: "个人相冲", value: personalConflictText },
-      { label: "四柱关系", value: personalRelationText }
+      { label: "个人撞点", value: personalConflictText },
+      { label: "密码关系", value: personalRelationText }
     ],
-    basisExplanation: `${recommendation.reason} 综合${availableGoodTimeCount}段可用吉时、当日神煞与个人关系后进入当前排名。`,
+    basisExplanation: `${recommendation.reason} 综合${availableGoodTimeCount}段可用时段、当日加减能量与个人关系后进入当前排名。`,
     personalBasis,
     caution: recommendation.caution
   };
@@ -1262,13 +1283,13 @@ function finalizeGoodDayResults(results, limit) {
         : "";
 
       const positiveEvidence = item.positiveEvidence.map((evidence) => {
-        if (evidence.label !== "可用吉时") return evidence;
+        if (evidence.label !== "可用时段") return evidence;
         const extraCount = Math.max(0, goodTimeList.length - 1);
         return {
-          label: "推荐吉时",
+          label: "推荐好时段",
           value: recommendedGoodTimeText
             ? `${recommendedGoodTimeText}${extraCount ? ` · 另有${extraCount}段可用` : ""}`
-            : "当前条件下无明显吉时"
+            : "当前条件下无明显好时段"
         };
       });
       const finalized = Object.assign({}, item, {
@@ -1277,7 +1298,7 @@ function finalizeGoodDayResults(results, limit) {
         recommendedGoodTime,
         recommendedGoodTimeText,
         bestAction: `${actionBase}。`,
-        bestTime: recommendedGoodTimeText || "当前条件下无明显吉时，按现实安排预留缓冲",
+        bestTime: recommendedGoodTimeText || "当前条件下无明显好时段，按现实安排预留缓冲",
         riskNotice: caution,
         positiveEvidence
       });
@@ -1303,7 +1324,10 @@ function getGoodDayRecommendations(actionKey, rangeDays, profile, options) {
     if (result) results.push(result);
   }
 
-  const recommendations = finalizeGoodDayResults(results, context.limit);
+  const recommendations = translateCopyData(
+    finalizeGoodDayResults(results, context.limit),
+    context.classicCopyEnabled
+  );
   goodDayCache[context.cacheKey] = recommendations;
   return recommendations;
 }
@@ -1331,7 +1355,10 @@ function getGoodDayRecommendationsAsync(actionKey, rangeDays, profile, options, 
         if (result) results.push(result);
       }
       const complete = cursor >= context.searchDays;
-      const visibleResults = finalizeGoodDayResults(results, context.limit);
+      const visibleResults = translateCopyData(
+        finalizeGoodDayResults(results, context.limit),
+        context.classicCopyEnabled
+      );
       if (typeof onProgress === "function") {
         onProgress({ processed: cursor, total: context.searchDays, results: visibleResults, complete, cached: false });
       }

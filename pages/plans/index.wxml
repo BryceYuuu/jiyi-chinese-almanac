@@ -90,7 +90,7 @@
   <view class="plans-empty" wx:if="{{!hasPlans}}">
     <view class="empty-seal">计</view>
     <text class="empty-title">还没有计划</text>
-    <text class="empty-copy">找好日子后保存计划，日期和行动会出现在这里。</text>
-    <button class="primary-button empty-action" bindtap="startSearch">去找好日子</button>
+    <text class="empty-copy">{{copy.plansEmpty}}</text>
+    <button class="primary-button empty-action" bindtap="startSearch">{{copy.goFindDay}}</button>
   </view>
 </view>

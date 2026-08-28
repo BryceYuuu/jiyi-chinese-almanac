@@ -103,7 +103,7 @@
           </button>
           <button class="{{professionalClass}}" data-mode="professional" bindtap="switchMode">
             <text class="mode-name">专业版</text>
-            <text class="mode-desc">完整宜忌与传统信息</text>
+            <text class="mode-desc">{{copy.professionalOnboardingDescription}}</text>
           </button>
         </view>
       </view>

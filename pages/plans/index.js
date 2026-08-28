@@ -1,10 +1,13 @@
 const { parseDate } = require("../../utils/date");
 const { getPlanLifecycle, getPlans, getPlanStats } = require("../../utils/plans");
-const { getThemeClass, getThemeKey } = require("../../utils/theme");
+const { getAppSnapshot } = require("../../utils/app-state");
+const { getVocabulary } = require("../../utils/vocabulary");
 
 Page({
   data: {
     themeClass: "theme-cinnabar",
+    copy: getVocabulary({}),
+    classicCopyEnabled: false,
     hasPlans: false,
     hasPending: false,
     hasToday: false,
@@ -27,6 +30,7 @@ Page({
     const today = new Date();
     const plans = getPlans();
     const stats = getPlanStats(today);
+    const snapshot = getAppSnapshot(today, { plans: false, checkins: false });
     const mapPlan = (plan) => {
       const date = parseDate(plan.date);
       const lifecycle = getPlanLifecycle(plan, today);
@@ -53,7 +57,9 @@ Page({
     const nextPlan = focusPlan ? mapPlan(focusPlan) : null;
 
     this.setData({
-      themeClass: getThemeClass(getThemeKey()),
+      themeClass: snapshot.themeClass,
+      copy: snapshot.copy,
+      classicCopyEnabled: snapshot.classicCopyEnabled,
       hasPlans: plans.length > 0,
       hasPending: pendingPlans.length > 0,
       hasToday: todayPlans.length > 0,
