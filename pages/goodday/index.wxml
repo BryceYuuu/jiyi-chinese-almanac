@@ -4,7 +4,7 @@
   <image class="page-texture page-texture-tail" src="{{themeTextureBody}}" mode="scaleToFill"></image>
 
   <view class="page-head">
-    <text class="page-title">找个好日子</text>
+    <text class="page-title">{{copy.goodDayTitle}}</text>
     <text class="page-subtitle">先说明要做什么，再按你的真实时间条件筛选。</text>
   </view>
 
@@ -41,7 +41,7 @@
           <text class="rule-confirm-state">已选择</text>
         </view>
         <view class="rule-detail-row">
-          <text class="rule-detail-label rule-detail-positive">宜中加分</text>
+          <text class="rule-detail-label rule-detail-positive">{{copy.rulePositive}}</text>
           <text class="rule-detail-copy">{{customRuleMatch}}</text>
         </view>
         <view class="rule-detail-row">
@@ -52,7 +52,7 @@
           <text class="rule-detail-label rule-detail-neutral">降低排名</text>
           <text class="rule-detail-copy">{{customRulePenaltyText}}</text>
         </view>
-        <text class="rule-method">另结合建除日值、值神、吉时与个人避冲综合排序。</text>
+        <text class="rule-method">{{copy.ruleMethod}}</text>
         <text class="rule-hint">适用场景：{{customRuleHint}}</text>
       </view>
     </view>
@@ -182,7 +182,7 @@
           </view>
 
           <view class="evidence-group evidence-risk">
-            <text class="evidence-title">风险与避冲</text>
+            <text class="evidence-title">{{copy.riskAndCompatibility}}</text>
             <view class="{{evidence.termClass}}" wx:for="{{item.conflictEvidence}}" wx:key="label" wx:for-item="evidence" data-term="{{evidence.termKey}}" data-value="{{evidence.value}}" bindtap="openTerm">
               <text class="detail-label">{{evidence.label}}<text class="evidence-term-mark" wx:if="{{termHelpEnabled && evidence.termKey}}">?</text></text><text class="detail-value">{{evidence.value}}</text>
             </view>

@@ -1,8 +1,8 @@
 {
   "name": "jiyi",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
-  "description": "吉易 V0 纯前端微信小程序",
+  "description": "Local-first Chinese Almanac, Bazi, Lunar Calendar and auspicious date selection WeChat Mini Program",
   "scripts": {
     "miniprogram:build-npm": "echo \"请在微信开发者工具中执行 工具 > 构建 npm\""
   },

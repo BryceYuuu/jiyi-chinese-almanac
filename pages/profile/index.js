@@ -3,6 +3,7 @@ const { getBirthChart } = require("../../utils/bazi");
 const { getPlanLifecycle } = require("../../utils/plans");
 const { ensureProfileReady, getDisplayName, getProfile, saveProfile } = require("../../utils/profile");
 const { getThemeConfig, getThemeOptions, setTheme } = require("../../utils/theme");
+const { getVocabulary } = require("../../utils/vocabulary");
 
 Page({
   data: {
@@ -12,6 +13,7 @@ Page({
     themeTextureTop: "/assets/materials/poster-coral-paper.jpg",
     themeTextureBody: "/assets/materials/poster-coral-flow.jpg",
     themeOptions: getThemeOptions("cinnabar"),
+    copy: getVocabulary({}),
     profile: null,
     displayName: "",
     avatarText: "吉",
@@ -29,6 +31,7 @@ Page({
     birthChartPrompt: "补充出生日期与时间，完善本地历法资料。",
     avoidOwnChong: true,
     termHelpEnabled: false,
+    classicCopyEnabled: false,
     mode: "friendly",
     friendlyClass: "mode-choice mode-choice-active",
     professionalClass: "mode-choice",
@@ -37,7 +40,7 @@ Page({
     pendingPlanCount: 0,
     hasNextPlan: false,
     nextPlanTitle: "还没有待进行计划",
-    nextPlanMeta: "找好日子后可以保存为计划"
+    nextPlanMeta: "找元气日后可以保存为计划"
   },
 
   onShow() {
@@ -63,6 +66,7 @@ Page({
       themeTextureTop: theme.textureTop,
       themeTextureBody: theme.textureBody,
       themeOptions: getThemeOptions(snapshot.theme),
+      copy: snapshot.copy,
       profile,
       displayName,
       avatarText: displayName.slice(0, 1),
@@ -84,6 +88,7 @@ Page({
         : "补充出生日期与时间，完善本地历法资料。",
       avoidOwnChong: profile.avoidOwnChong !== false,
       termHelpEnabled: profile.termHelpEnabled === true,
+      classicCopyEnabled: snapshot.classicCopyEnabled,
       mode: snapshot.mode,
       friendlyClass: snapshot.mode === "professional" ? "mode-choice" : "mode-choice mode-choice-active",
       professionalClass: snapshot.mode === "professional" ? "mode-choice mode-choice-active" : "mode-choice",
@@ -94,7 +99,7 @@ Page({
       nextPlanTitle: nextPlan ? nextPlan.title : "还没有待进行计划",
       nextPlanMeta: nextPlan
         ? `${nextPlanLifecycle.statusText} · ${nextPlan.date} · ${nextPlan.actionName}`
-        : "找好日子后可以保存为计划"
+        : snapshot.copy.nextPlanEmpty
     });
   },
 
@@ -136,6 +141,15 @@ Page({
   onTermHelpChange(event) {
     const profile = Object.assign({}, getProfile(), {
       termHelpEnabled: event.detail.value
+    });
+    saveProfile(profile);
+    this.renderKey = "";
+    this.renderProfile();
+  },
+
+  onClassicCopyChange(event) {
+    const profile = Object.assign({}, getProfile(), {
+      classicCopyEnabled: event.detail.value
     });
     saveProfile(profile);
     this.renderKey = "";

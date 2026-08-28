@@ -4,6 +4,7 @@ const { addDays, formatDate, getDayDiff, parseDate } = require("../../utils/date
 const { getPlanDisplayLevel, upsertPlan } = require("../../utils/plans");
 const { getAlmanacTerm } = require("../../data/almanac-terms");
 const { getThemeConfig } = require("../../utils/theme");
+const { getVocabulary, translateCopyData, translateCopyText } = require("../../utils/vocabulary");
 
 const CUSTOM_KEYWORDS = [
   { key: "marry", words: ["结婚", "婚礼", "领证", "订婚", "见家长"] },
@@ -21,6 +22,8 @@ Page({
     themeClass: "theme-cinnabar",
     themeTextureTop: "/assets/materials/poster-coral-paper.jpg",
     themeTextureBody: "/assets/materials/poster-coral-flow.jpg",
+    copy: getVocabulary({}),
+    classicCopyEnabled: false,
     profile: null,
     mode: "friendly",
     showProfessionalScores: false,
@@ -45,7 +48,7 @@ Page({
     customRuleHint: "旅行、出差、启程或远行",
     customRuleFocus: "出门走动，行程推进更顺",
     customRuleMatch: "出行、赴任、移徙",
-    customRuleExcludeText: "当天忌出行、赴任时直接排除",
+    customRuleExcludeText: "当天避坑清单出现出行、赴任时直接排除",
     customRulePenaltyText: "",
     customRuleHasPenalty: false,
     ruleSourceText: "请选择最接近的事项类型",
@@ -366,9 +369,12 @@ Page({
         hasMoreResults: results.length > 3,
         moreResultsText: "查看更多候选",
         resultSubtitle: this.data.showProfessionalScores
-          ? "按事项命中、日值、时段和个人避冲综合排序"
+          ? "按事项命中、日值、时段和个人搭配综合排序"
           : "按真实条件与传统日值综合排序",
-        resultTitle: results.length ? `${sceneName} · ${results.length}个推荐日` : `${sceneName} · 暂无明确推荐`
+        resultTitle: translateCopyText(
+          results.length ? `${sceneName} · ${results.length}个元气推荐` : `${sceneName} · 暂无明确推荐`,
+          this.data.classicCopyEnabled
+        )
       });
     }).catch(() => {
       if (searchToken !== this.searchToken) return;
@@ -386,7 +392,10 @@ Page({
     });
   },
 
-  decorateResult(item, index) {
+  decorateResult(item, index, classicCopyEnabled) {
+    const classicEnabled = typeof classicCopyEnabled === "boolean"
+      ? classicCopyEnabled
+      : this.data.classicCopyEnabled;
     const displayLevel = getPlanDisplayLevel(item);
     return Object.assign({}, item, {
       rank: item.rank || index + 1,
@@ -396,16 +405,16 @@ Page({
       levelClass: displayLevel === "优选" ? "result-level result-level-best" : "result-level",
       dayStatusClass: `result-day-status ${item.dayRatingClass || "rating-neutral"}`,
       conflictClass: item.hasConflict ? "fact-chip fact-chip-warning" : "fact-chip fact-chip-clear",
-      positiveEvidence: this.decorateEvidence(item.positiveEvidence),
-      neutralEvidence: this.decorateEvidence(item.neutralEvidence),
-      conflictEvidence: this.decorateEvidence(item.conflictEvidence),
-      personalEvidence: this.decorateEvidence(item.personalEvidence)
+      positiveEvidence: this.decorateEvidence(item.positiveEvidence, classicEnabled),
+      neutralEvidence: this.decorateEvidence(item.neutralEvidence, classicEnabled),
+      conflictEvidence: this.decorateEvidence(item.conflictEvidence, classicEnabled),
+      personalEvidence: this.decorateEvidence(item.personalEvidence, classicEnabled)
     });
   },
 
-  decorateEvidence(list) {
+  decorateEvidence(list, classicCopyEnabled) {
     return (list || []).map((evidence) => {
-      const term = getAlmanacTerm(evidence.label);
+      const term = getAlmanacTerm(evidence.label, "", classicCopyEnabled);
       return Object.assign({}, evidence, {
         termKey: term ? evidence.label : "",
         termClass: term ? "evidence-row evidence-row-explainable" : "evidence-row"
@@ -415,7 +424,11 @@ Page({
 
   openTerm(event) {
     if (!this.data.termHelpEnabled) return;
-    const term = getAlmanacTerm(event.currentTarget.dataset.term, event.currentTarget.dataset.value);
+    const term = getAlmanacTerm(
+      event.currentTarget.dataset.term,
+      event.currentTarget.dataset.value,
+      this.data.classicCopyEnabled
+    );
     if (!term) return;
     this.setData({ activeTerm: term, showTermSheet: true });
   },
@@ -496,7 +509,10 @@ Page({
     const profile = snapshot.profile;
     const showProfessionalScores = snapshot.mode === "professional";
     const theme = getThemeConfig(snapshot.theme);
-    const actionRule = getActionRule(this.data.customRule);
+    const actionRule = translateCopyData(
+      getActionRule(this.data.customRule),
+      snapshot.classicCopyEnabled
+    );
     const customRule = this.data.customRules.find((item) => item.key === this.data.customRule);
     const calculationRuleName = this.data.selectedScene === "custom"
       ? customRule ? customRule.name : actionRule.name
@@ -511,6 +527,8 @@ Page({
       themeClass: snapshot.themeClass,
       themeTextureTop: theme.textureTop,
       themeTextureBody: theme.textureBody,
+      copy: snapshot.copy,
+      classicCopyEnabled: snapshot.classicCopyEnabled,
       profile,
       mode: snapshot.mode,
       showProfessionalScores,
@@ -519,13 +537,13 @@ Page({
         ? "按事项命中、日值、时段和个人关系综合排序"
         : "按真实条件与传统日值综合排序",
       resultRuleText: `按“${calculationRuleName}”类规则计算`,
-      results: this.data.results.map((item, index) => this.decorateResult(item, index)),
+      results: this.data.results.map((item, index) => this.decorateResult(item, index, snapshot.classicCopyEnabled)),
       selectedRange,
-      filterText: profile.birthTime
-        ? `已结合四柱关系，并${profile.avoidOwnChong ? "避开生肖冲日" : "保留生肖冲日"}`
+      filterText: translateCopyText(profile.birthTime
+        ? `已结合密码关系，并${profile.avoidOwnChong ? "避开不合拍日" : "保留不合拍日"}`
         : profile.zodiac
-          ? `已按生肖${profile.zodiac}${profile.avoidOwnChong ? "避开相冲日" : "保留全部日期"}`
-        : "当前按通用规则计算 · 设置生日可开启避冲",
+          ? `已按生肖${profile.zodiac}${profile.avoidOwnChong ? "避开不合拍日" : "保留全部日期"}`
+        : "当前按通用规则计算 · 设置生日可开启生肖搭配提醒", snapshot.classicCopyEnabled),
       showCustom: this.data.selectedScene === "custom",
       sceneOptions: this.data.scenes.map((scene) => ({
         ...scene,
@@ -566,6 +584,7 @@ Page({
         label: dateKey.slice(5).replace("-", "月") + "日"
       }))
     });
+    wx.setNavigationBarTitle({ title: snapshot.copy.tabGoodDay });
   },
 
   getActionKey() {

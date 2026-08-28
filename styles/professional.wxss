@@ -61,8 +61,9 @@
 
 .pro-day-badge text:first-child {
   font-family: "Songti SC", "STSong", serif;
-  font-size: 29rpx;
+  font-size: 25rpx;
   font-weight: 600;
+  line-height: 1.1;
 }
 
 .pro-day-badge text:last-child {
@@ -98,16 +99,16 @@
 
 .pro-almanac-label {
   display: flex;
-  width: 50rpx;
+  width: 68rpx;
   height: 50rpx;
-  flex: 0 0 50rpx;
+  flex: 0 0 68rpx;
   align-items: center;
   justify-content: center;
   border-radius: 9rpx;
   background: var(--color-primary-soft);
   color: var(--color-primary);
   font-family: "Songti SC", "STSong", serif;
-  font-size: 25rpx;
+  font-size: 22rpx;
   font-weight: 600;
 }
 
@@ -419,7 +420,7 @@
   min-height: 66rpx;
   align-items: center;
   border-bottom: 1rpx solid var(--color-line);
-  grid-template-columns: 150rpx minmax(0, 1fr);
+  grid-template-columns: 180rpx minmax(0, 1fr);
 }
 
 .pro-observation-row:last-child {
@@ -428,7 +429,8 @@
 
 .pro-observation-label {
   color: var(--color-muted);
-  font-size: 22rpx;
+  font-size: 21rpx;
+  line-height: 1.35;
 }
 
 .pro-observation-value {
@@ -516,7 +518,7 @@
   color: var(--color-muted);
   font-size: 22rpx;
   line-height: 1.45;
-  grid-template-columns: 28rpx minmax(0, 1fr);
+  grid-template-columns: 52rpx minmax(0, 1fr);
 }
 
 .pro-time-line text:first-child {
