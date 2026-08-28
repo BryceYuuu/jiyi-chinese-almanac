@@ -31,10 +31,10 @@
 
 <table>
   <tr>
-    <td align="center"><img src="docs/assets/jiyi-daily-huangli.jpg" alt="Daily Huangli and Chinese Almanac" /><br /><strong>Daily Huangli / 今日黄历</strong></td>
-    <td align="center"><img src="docs/assets/jiyi-lunar-calendar-solar-terms.jpg" alt="Chinese lunar calendar and solar terms" /><br /><strong>Lunar Calendar / 农历节气</strong></td>
-    <td align="center"><img src="docs/assets/jiyi-bazi-four-pillars.jpg" alt="Bazi Four Pillars calculation" /><br /><strong>Bazi / 四柱八字</strong></td>
-    <td align="center"><img src="docs/assets/jiyi-auspicious-date-selection.jpg" alt="Auspicious date selection and ranking" /><br /><strong>Date Selection / 择日推荐</strong></td>
+    <td width="25%" align="center" valign="top"><img src="docs/assets/jiyi-daily-huangli.jpg" width="100%" alt="Daily Huangli and Chinese Almanac" /><br /><strong>Daily Huangli</strong><br />今日黄历</td>
+    <td width="25%" align="center" valign="top"><img src="docs/assets/jiyi-lunar-calendar-solar-terms.jpg" width="100%" alt="Chinese lunar calendar and solar terms" /><br /><strong>Lunar Calendar</strong><br />农历节气</td>
+    <td width="25%" align="center" valign="top"><img src="docs/assets/jiyi-bazi-four-pillars.jpg" width="100%" alt="Bazi Four Pillars calculation" /><br /><strong>Bazi / Four Pillars</strong><br />四柱八字</td>
+    <td width="25%" align="center" valign="top"><img src="docs/assets/jiyi-auspicious-date-selection.jpg" width="100%" alt="Auspicious date selection and ranking" /><br /><strong>Date Selection</strong><br />择日推荐</td>
   </tr>
 </table>
 
