@@ -1,4 +1,4 @@
-# 吉易 Jiyi
+# 吉易 Jiyi / Chinese Almanac, Bazi & Date Selection
 
 <p align="center">
   <img src="docs/assets/jiyi-logo.png" width="112" alt="吉易 Jiyi Chinese Almanac and Bazi WeChat Mini Program logo" />
@@ -94,8 +94,8 @@ Key modules:
 ## Run Locally / 本地运行
 
 ```bash
-git clone https://github.com/BryceYuuu/jiyi.git
-cd jiyi
+git clone https://github.com/BryceYuuu/jiyi-chinese-almanac.git
+cd jiyi-chinese-almanac
 npm install
 ```
 
